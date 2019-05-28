@@ -1,0 +1,26 @@
+html, #root {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.App {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f989cb+0,7ee5e3+100 */
+    /* Fusion Theme: Pink and Sky Blue */
+    background: #f989cb;
+    /* Old browsers */
+    background: -moz-linear-gradient(-45deg, #f989cb 0%, #7ee5e3 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, #f989cb 0%, #7ee5e3 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, #f989cb 0%, #7ee5e3 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f989cb', endColorstr='#7ee5e3',GradientType=1 );
+    /* IE6-9 fallback on horizontal gradient */
+}
