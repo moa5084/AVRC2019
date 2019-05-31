@@ -102,21 +102,30 @@ class AnswerSheet extends Component {
                     </Typography>
                 </div>
                 <div className={this.props.classes.QuestionWrapper}>
-                    <img src={this.props.question.img} alt='loading' className={this.props.classes.img}/>
+                    {this.props.question.leadSentence ? (<p>{this.props.question.leadSentence}</p>) : null}
+                    {this.props.question.status === 'HD' ? (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>)
+                     : this.props.question.img
+                        ? (<img src={this.props.question.img} alt='loading' className={this.props.classes.img}/>)
+                        : null
+                    }
                 </div>
-                <div className={this.props.classes.Form}>
-                    <TextField 
-                        id='answer'
-                        label='答えを入力せよ'
-                        className={this.props.classes.answerField}
-                        variant='outlined'
-                        value={this.state.answer}
-                        onChange={this.onChange}
-                    />      
-                    <Button variant="contained" color="primary" className={this.props.classes.submitButton}>
-                        <SendIcon />
-                    </Button>
-                </div>
+                {
+                    this.props.question.status === 'PL' ? (
+                        <div className={this.props.classes.Form}>
+                            <TextField 
+                                id='answer'
+                                label={this.props.question.instruction ? this.props.question.instruction : '答えを入力せよ'}
+                                className={this.props.classes.answerField}
+                                variant='outlined'
+                                value={this.state.answer}
+                                onChange={this.onChange}
+                            />      
+                            <Button variant="contained" color="primary" className={this.props.classes.submitButton}>
+                                <SendIcon />
+                            </Button>
+                        </div>
+                    ) : null
+                }
                 <div className={this.props.classes.Footer}>
                     <img src='http://juicy-apple.fun/av/AVRC2019/images/AVRC2018_Logo.png' alt='loading' className={this.props.classes.footerImg}/>
                 </div>

@@ -95,7 +95,7 @@ function Wrapper() {
 
 function Main() {
   const classes = useStyles();
-  const myQuestion = searchQuestion('A');
+  const myQuestion = searchQuestion('alpha');
   return (
     <div className={classes.main}>
       <AnswerSheet question={myQuestion}/>
