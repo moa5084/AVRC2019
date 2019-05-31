@@ -97,17 +97,17 @@ class AnswerSheet extends Component {
         return (
             <div className={this.props.classes.AnswerSheet}>
                 <div className={this.props.classes.Header}>
-                    <Typography variant="h2" gutterBottom>
-                        A
+                    <Typography variant="h3" gutterBottom>
+                        {this.props.question.title || 'No Title'}
                     </Typography>
                 </div>
                 <div className={this.props.classes.QuestionWrapper}>
-                    <img src='http://juicy-apple.fun/av/AVRC2019/images/Final-2.pdf' alt='loading' className={this.props.classes.img}/>
+                    <img src={this.props.question.img} alt='loading' className={this.props.classes.img}/>
                 </div>
                 <div className={this.props.classes.Form}>
                     <TextField 
                         id='answer'
-                        label='答えを入力'
+                        label='答えを入力せよ'
                         className={this.props.classes.answerField}
                         variant='outlined'
                         value={this.state.answer}

@@ -1,9 +1,10 @@
 import React from 'react';
+import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 import Particles from 'react-particles-js';
 
 import AnswerSheet from './AnswerSheet';
-import { createMuiTheme } from '@material-ui/core';
+import questions from './questions';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -51,7 +52,28 @@ const theme = createMuiTheme({
       contrastText: '#000',
     },
   },
+  // typography: {
+  //   fontFamily: [
+  //     '"Helvetica Neue"',
+  //     '"Segoe UI"',
+  //     '-apple-system',
+  //     'BlinkMacSystemFont',
+  //     'Roboto',
+  //     'Arial',
+  //     'sans-serif',
+  //     '"Apple Color Emoji"',
+  //     '"Segoe UI Emoji"',
+  //     '"Segoe UI Symbol"',
+  //   ].join(','),
+  // },
 });
+
+function searchQuestion (id) {
+  const res = questions.filter(item => { 
+    return item.id === id;
+  });
+  return (res.length > 0 ? res[0] : null);
+}
 
 function App() {
   return (
@@ -73,9 +95,10 @@ function Wrapper() {
 
 function Main() {
   const classes = useStyles();
+  const myQuestion = searchQuestion('A');
   return (
     <div className={classes.main}>
-      <AnswerSheet />
+      <AnswerSheet question={myQuestion}/>
     </div>
   );
 }
