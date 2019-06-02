@@ -3,8 +3,7 @@ import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 import Particles from 'react-particles-js';
 
-import AnswerSheet from './AnswerSheet';
-import questions from './questions';
+import Player from './Player';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -68,12 +67,6 @@ const theme = createMuiTheme({
   // },
 });
 
-function searchQuestion (id) {
-  const res = questions.filter(item => { 
-    return item.id === id;
-  });
-  return (res.length > 0 ? res[0] : null);
-}
 
 function App() {
   return (
@@ -95,10 +88,9 @@ function Wrapper() {
 
 function Main() {
   const classes = useStyles();
-  const myQuestion = searchQuestion('alpha');
   return (
     <div className={classes.main}>
-      <AnswerSheet question={myQuestion}/>
+      <Player />
     </div>
   );
 }
