@@ -3,7 +3,6 @@ import {
     BrowserRouter as Router,
     Route,
     Switch,
-    Link
 } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/styles';
@@ -33,20 +32,21 @@ function searchRound (id) {
 
 class Player extends Component {
     render () {
+        const prefix = this.props.type === 'A' ? '/Newcomer' : '/NewComer';
         return (
             <Router basename='/tokusetsu/party2019'>
                 <Switch>
-                    <Route exact path='/Newcomer' render={(props) => {
-                        console.log("failed");
+                    <Route exact path={prefix} render={(props) => {
+                        console.log("Home");
                         return false;
                     }}/>
-                    <Route exact path='/Newcomer/:round' render={(props) => {
+                    <Route exact path={prefix + '/:round'} render={(props) => {
                         const myRound = searchRound(props.match.params.round);
                         return (
                             <RoundMenu round={myRound} />
                         );
                     }}/>
-                    <Route exact path='/Newcomer/:round/:question' render={(props) => {
+                    <Route exact path={prefix + '/:round/:question'} render={(props) => {
                         const myQuestion = searchQuestion(props.match.params.question);
                         return (
                             <AnswerSheet question={myQuestion} />

@@ -1,6 +1,8 @@
 const Styles = (theme) => ({
     AnswerSheet: {
         width: '100%',
+        maxHeight: '90%',
+        overflow: 'scroll',
         margin: '0',
         padding: '20px',
         background: 'rgba(255, 255, 255, 0.5)',
@@ -18,6 +20,8 @@ const Styles = (theme) => ({
         minHeight: '60px',
         position: 'relative',
         padding: '10px',
+        display: 'flex',
+        flexWrap: 'wrap',
         '&::before': {
             content: '""',
             width: '20px',
@@ -28,6 +32,7 @@ const Styles = (theme) => ({
             left: '0',
             borderLeft: '#999 1px solid',
             borderTop: '#999 1px solid',
+            pointerEvents: 'none',
         },
         '&::after': {
             content: '""',
@@ -39,11 +44,13 @@ const Styles = (theme) => ({
             right: '0',
             borderRight: '#999 1px solid',
             borderBottom: '#999 1px solid',
+            pointerEvents: 'none',
         },
     },
     img: {
         width: '100%',
-        height: 'auto'
+        height: 'auto',
+        alignSelf: 'center'
     },
     Form: {
         margin: '40px 0',
@@ -66,6 +73,34 @@ const Styles = (theme) => ({
         maxWidth: '40%',
         height: 'auto',
     },
+    QuestionLinkWrapper: {
+        width: '20%',
+        position: 'relative',
+        '&::before': {
+            content: '""',
+            display: 'block',
+            width: '100%',
+            paddingTop: '100%',
+        }
+    },
+    QuestionLinkBlock: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        right: '0',
+        bottom: '0',
+        boxSizing: 'border-box',
+        border: '#ccc 1px solid',
+        borderRadius: '3px',
+        margin: '2px',
+    },
+    QuestionLink: {
+        display: 'block',
+        textDecoration: 'none',
+    }
 });
 
 export default Styles;
