@@ -28,7 +28,7 @@ class AnswerSheet extends Component {
     render () {
         return (
             <div className={this.props.classes.AnswerSheet}>
-                <div className={this.props.classes.Header}>
+                <div className={this.props.classes.SheetHeader}>
                     <Typography variant="h3" gutterBottom>
                         {this.props.question.title || 'No Title'}
                     </Typography>

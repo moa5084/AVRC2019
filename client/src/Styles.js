@@ -1,4 +1,12 @@
 const Styles = (theme) => ({
+    Header: {
+        width: '100%',
+        height: '10%',
+        position: 'fixed',
+        textAlign: 'center',
+        top: '0',
+        left: '0',
+    },
     AnswerSheet: {
         width: '100%',
         maxHeight: '90%',
@@ -11,7 +19,7 @@ const Styles = (theme) => ({
         flexWrap: 'wrap',
         justifyContent: 'center',
     },
-    Header: {
+    SheetHeader: {
         width: '100%',
         textAlign: 'center',
     },

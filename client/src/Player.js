@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/styles';
 
 import AnswerSheet from './AnswerSheet';
 import RoundMenu from './RoundMenu';
 import questions from './questions';
+import Header from './Header';
 import Styles from './Styles';
 
 function searchQuestion (id) {
@@ -35,9 +32,10 @@ class Player extends Component {
         const prefix = this.props.type === 'A' ? '/Newcomer' : '/NewComer';
         return (
             <Router basename='/tokusetsu/party2019'>
+
+                <Header />
                 <Switch>
                     <Route exact path={prefix} render={(props) => {
-                        console.log("Home");
                         return false;
                     }}/>
                     <Route exact path={prefix + '/:round'} render={(props) => {

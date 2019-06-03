@@ -20,7 +20,7 @@ class RoundMenu extends Component {
         });
         return (
             <div className={this.props.classes.AnswerSheet}>
-                <div className={this.props.classes.Header}>
+                <div className={this.props.classes.SheetHeader}>
                     <Typography variant="h3" gutterBottom>
                         {this.props.round.title || 'No Title'}
                     </Typography>
