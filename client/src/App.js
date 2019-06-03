@@ -1,4 +1,9 @@
 import React from 'react';
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+} from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 import Particles from 'react-particles-js';
@@ -90,7 +95,20 @@ function Main() {
   const classes = useStyles();
   return (
     <div className={classes.main}>
-      <Player />
+      <Router basename='/tokusetsu/party2019'>
+        <Switch>
+          <Route path='/Newcomer' render={(props) => {
+            return (
+              <Player type='A' />
+            );
+          }}/>
+          <Route path='/NewComer' render={(props) => {
+            return (
+              <Player type='B' />
+            );
+          }}/>
+        </Switch>
+      </Router>
     </div>
   );
 }

@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Link
+} from 'react-router-dom';
 
 import { withStyles } from '@material-ui/styles';
 
@@ -26,18 +32,28 @@ function searchRound (id) {
 }
 
 class Player extends Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            myQuestion: searchQuestion('A'),
-        }
-    }
-    // const myRound = searchRound('1');
-    // console.log(myRound);
     render () {
         return (
-            <AnswerSheet question={this.state.myQuestion}/>
-            // <RoundMenu round={myRound} /> 
+            <Router basename='/tokusetsu/party2019'>
+                <Switch>
+                    <Route exact path='/Newcomer' render={(props) => {
+                        console.log("failed");
+                        return false;
+                    }}/>
+                    <Route exact path='/Newcomer/:round' render={(props) => {
+                        const myRound = searchRound(props.match.params.round);
+                        return (
+                            <RoundMenu round={myRound} />
+                        );
+                    }}/>
+                    <Route exact path='/Newcomer/:round/:question' render={(props) => {
+                        const myQuestion = searchQuestion(props.match.params.question);
+                        return (
+                            <AnswerSheet question={myQuestion} />
+                        );
+                    }}/>
+                </Switch>
+            </Router>
         );
     }
 }
