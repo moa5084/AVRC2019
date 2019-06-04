@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
 
 import AnswerSheet from './AnswerSheet';
+import PlayerHome from './PlayerHome';
 import RoundMenu from './RoundMenu';
 import questions from './questions';
 import Header from './Header';
@@ -46,7 +47,9 @@ class Player extends Component {
                 <Header questions={this.state.questions}/>
                 <Switch>
                     <Route exact path={prefix} render={(props) => {
-                        return false;
+                        return (
+                            <PlayerHome questions={this.state.questions} />
+                        );
                     }}/>
                     <Route exact path={prefix + '/:round'} render={(props) => {
                         const myRound = this.searchRound(props.match.params.round);
