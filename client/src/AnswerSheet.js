@@ -35,14 +35,14 @@ class AnswerSheet extends Component {
                 </div>
                 <div className={this.props.classes.QuestionWrapper}>
                     {this.props.question.leadSentence ? (<p>{this.props.question.leadSentence}</p>) : null}
-                    {this.props.question.status === 'HD' ? (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>)
+                    {this.props.question.status !== 'playing' && this.props.question.status !== 'finished' ? (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>)
                      : this.props.question.img
                         ? (<img src={this.props.question.img} alt='loading' className={this.props.classes.img}/>)
                         : null
                     }
                 </div>
                 {
-                    this.props.question.status === 'PL' ? (
+                    this.props.question.status === 'playing' ? (
                         <div className={this.props.classes.Form}>
                             <TextField 
                                 id='answer'

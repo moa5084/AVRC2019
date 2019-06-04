@@ -4,8 +4,47 @@ const Styles = (theme) => ({
         height: '10%',
         position: 'fixed',
         textAlign: 'center',
-        top: '0',
+        bottom: '0%',
         left: '0',
+        display: 'flex',
+        flexWrap: 'nowrap',
+        alignItems: 'center',
+    },   
+    HeaderBackWrapper: {
+        width: '40%',
+        marginLeft: '5%',
+        height: '100%',
+        display: 'flex',
+        flexWrap: 'nowrap',
+        alignItems: 'center',
+        justifyContent: 'center',
+        opacity: '0.8',
+    },   
+    HeaderBackButton: {
+        width: '100%',
+        minHeight: '40px',
+        position: 'relative',
+        backgroundColor: '#fff',
+        borderRadius: '10px',
+        boxShadow: '0px 0px 5px 5px rgba(40, 40, 40, 0.2)',
+        textDecoration: 'none',
+        color: '#333',
+        display: 'flex',
+        alignItems: 'center',
+    },
+    HeaderBackArrow: {
+        width: '20%',
+        height: 'auto',
+        color: '#333',
+        display: 'block'
+    },
+    HeaderTitleWrapper: {
+        width: '60%',
+        height: '100%',
+        display: 'flex',
+        flexWrap: 'nowrap',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     AnswerSheet: {
         width: '100%',
@@ -89,6 +128,15 @@ const Styles = (theme) => ({
             display: 'block',
             width: '100%',
             paddingTop: '100%',
+        },
+        '&.large': {
+            width: '100%',
+            '&::before': {
+                content: '""',
+                display: 'block',
+                width: '100%',
+                paddingTop: '20%',
+            },
         }
     },
     QuestionLinkBlock: {
@@ -101,13 +149,58 @@ const Styles = (theme) => ({
         right: '0',
         bottom: '0',
         boxSizing: 'border-box',
-        border: '#ccc 1px solid',
+        border: '#5eb6ff 1px solid',
+        boxShadow: 'inset 0 0 5px 0 #5eb6ff',
+        backgroundColor: 'rgba(94, 182, 255, 0.3)',
         borderRadius: '3px',
         margin: '2px',
+        '&.banned': {
+            opacity: '0.3',
+            border: '#555 1px solid',
+            boxShadow: 'inset 0 0 5px 0 #555',
+            backgroundColor: 'rgba(85, 85, 85, 0.3)',
+        },
+        '&.teammateViewing': {
+            border: '#69ff40 1px solid',
+            boxShadow: 'inset 0 0 5px 0 #69ff40',
+            backgroundColor: 'rgba(105, 255, 64, 0.3)',
+        },
+        '&.accepted': {
+            border: '#ff4081 1px solid',
+            boxShadow: 'inset 0 0 5px 0 #ff4081',
+            backgroundColor: 'rgba(255, 64, 129, 0.3)',
+        },
+        '&.ready': {
+            border: '#555 1px solid',
+            boxShadow: 'inset 0 0 5px 0 #555',
+            backgroundColor: 'rgba(85, 85, 85, 0.3)',
+        },
     },
     QuestionLink: {
-        display: 'block',
+        display: 'flex',
+        width: '70%',
+        height: '70%',
+        padding: '15%',
+        alignItems: 'center',
+        justifyContent: 'center',
         textDecoration: 'none',
+        '&.large': {
+            width: '100%',
+            height: '100%',
+            padding: '0',
+        }
+    },
+    QuestionLinkImg: {
+        width: 'auto',
+        height: '100%',
+    },
+    QuestionLinkImgResult: {
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: 'auto',
+        height: '100%',
+        pointerEvents: 'none',
     }
 });
 

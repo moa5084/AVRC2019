@@ -32,8 +32,7 @@ class Player extends Component {
         const prefix = this.props.type === 'A' ? '/Newcomer' : '/NewComer';
         return (
             <Router basename='/tokusetsu/party2019'>
-
-                <Header />
+                <Header questions={questions}/>
                 <Switch>
                     <Route exact path={prefix} render={(props) => {
                         return false;

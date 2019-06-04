@@ -3,7 +3,7 @@ const questions = [
     {
         roundid: '0',
         title: 'Forms',
-        status: 'PL',
+        status: 'playing',
         questions: [
             {
                 id: 'Entry',
@@ -12,7 +12,7 @@ const questions = [
                 type: 'form',
                 leadSentence: '本大会で使用する名前を登録します。この名前は、成績発表において公開されることがあります。',
                 instruction: 'Your Name',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'TEntry',
@@ -21,14 +21,14 @@ const questions = [
                 type: 'form',
                 leadSentence: '本大会で使用するチーム名を登録します。この名前は、成績発表において公開されることがあります。',
                 instruction: 'Team Name',
-                status: 'PL',
+                status: 'playing',
             },
         ],
     },
     {
         roundid: '1',
         title: '1st Round',
-        status: 'PL',
+        status: 'playing',
         questions: [
             {
                 id: 'A',
@@ -36,7 +36,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'accepted',
             },
             {
                 id: 'B',
@@ -44,7 +44,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'teammateViewing',
             },
             {
                 id: 'C',
@@ -52,7 +52,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'banned',
             },
             {
                 id: 'D',
@@ -60,7 +60,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'E',
@@ -68,7 +68,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'F',
@@ -76,7 +76,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'G',
@@ -84,7 +84,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'H',
@@ -92,7 +92,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'I',
@@ -100,7 +100,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'J',
@@ -108,7 +108,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'K',
@@ -116,7 +116,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'L',
@@ -124,7 +124,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'M',
@@ -132,7 +132,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'N',
@@ -140,7 +140,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'O',
@@ -148,7 +148,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'P',
@@ -156,7 +156,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'Q',
@@ -164,7 +164,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'R',
@@ -172,7 +172,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'S',
@@ -180,7 +180,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'T',
@@ -188,7 +188,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'U',
@@ -196,7 +196,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'V',
@@ -204,7 +204,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'W',
@@ -212,7 +212,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'X',
@@ -220,7 +220,7 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
             {
                 id: 'Y',
@@ -228,14 +228,14 @@ const questions = [
                 roundid: '1',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'PL',
+                status: 'playing',
             },
         ],
     },
     {
         roundid: '2',
         title: '2nd Round',
-        status: 'PL',
+        status: 'ready',
         questions: [
             {
                 id: 'alpha',
@@ -243,7 +243,7 @@ const questions = [
                 roundid: '2',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'HD',
+                status: 'playing',
             },
             {
                 id: 'beta',
@@ -251,7 +251,7 @@ const questions = [
                 roundid: '2',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'HD',
+                status: 'ready',
             },
             {
                 id: 'gamma',
@@ -259,14 +259,14 @@ const questions = [
                 roundid: '2',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'HD',
+                status: 'ready',
             },
         ],
     },
     {
         roundid: '3',
         title: 'Extra Round',
-        status: 'PL',
+        status: 'playing',
         questions: [
             {
                 id: 'Z',
@@ -274,7 +274,7 @@ const questions = [
                 roundid: '3',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',
-                status: 'HD',
+                status: 'hidden',
             },
         ],
     },
