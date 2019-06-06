@@ -17,6 +17,7 @@ import RoundMenu from './RoundMenu';
 import questions from './questions';
 import Header from './Header';
 import Styles from './Styles';
+import { AVRCClient } from 'avrcclient';
 
 const ImageSrc = 'https://juicy-apple.fun/av/AVRC2019/images/';
 
@@ -45,6 +46,7 @@ class Player extends Component {
             }
             // questions: questions,
         }
+        let client = new AVRCClient();
     }
 
     getRestatusedQuestions (questions, statusObject) {
