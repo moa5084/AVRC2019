@@ -187,6 +187,17 @@ const Styles = (theme) => ({
             },
         }
     },
+    '@keyframes Block-playing': {
+        '0%': {
+            boxShadow: 'inset 0 0 5px 0 #5eb6ff',
+        },
+        '50%': {
+            boxShadow: 'inset 0 0 10px 0 #fff',
+        },
+        '100%': {
+            boxShadow: 'inset 0 0 5px 0 #5eb6ff',
+        }
+    },
     QuestionLinkBlock: {
         display: 'flex',
         justifyContent: 'center',
@@ -218,10 +229,8 @@ const Styles = (theme) => ({
             boxShadow: 'inset 0 0 5px 0 #ff4081',
             backgroundColor: 'rgba(255, 64, 129, 0.3)',
         },
-        '&.ready': {
-            border: '#555 1px solid',
-            boxShadow: 'inset 0 0 5px 0 #555',
-            backgroundColor: 'rgba(85, 85, 85, 0.3)',
+        '&.playing': {
+            animation: '$Block-playing 2s infinite',
         },
     },
     QuestionLink: {

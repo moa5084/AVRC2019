@@ -17,7 +17,8 @@ class RoundMenu extends Component {
                         'teammateViewing': item.status === 'teammateViewing',
                         'banned': item.status === 'banned',
                         'accepted': item.status === 'accepted',
-                    }
+                        'playing': item.status === 'playing',
+                    },
                 );
                 links.push(
                     <div className={this.props.classes.QuestionLinkWrapper} key={'QuestionLinkWrapper_' + item.id}>
@@ -42,6 +43,7 @@ class RoundMenu extends Component {
                     {
                         'ready': item.status === 'ready',
                         'accepted': item.status === 'accepted',
+                        'playing': item.status === 'playing',
                     }
                 );
                 const linkClass = classNames(

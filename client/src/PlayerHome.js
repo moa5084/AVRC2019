@@ -9,7 +9,7 @@ class PlayerHome extends Component {
     render () {
         let links = [];
         this.props.questions.forEach(item => {
-            if (item.type === 'question') {
+            if (item.type === 'question' && item.status !== 'hidden') {
                 const WrapperClass = classNames(
                     this.props.classes.QuestionLinkWrapper,
                     'large',
