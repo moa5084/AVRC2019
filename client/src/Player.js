@@ -40,6 +40,18 @@ class Player extends Component {
         });
         return myQuestions;
     }
+    
+    restatusQuestion (questions, id, status) {
+        let myQuestions = questions.slice();
+        myQuestions.forEach((round, index) => {
+            if (round.type === 'question') {
+                round.questions.forEach((question, index2) => {
+                    if (question.id === id) myQuestions[index].questions[index2].status = status;
+                });
+            }
+        });
+        return myQuestions;
+    }
 
     onStageChange (st) {
         switch (st) {
