@@ -293,6 +293,21 @@ const Styles = (theme) => ({
         width: 'auto',
         height: '100%',
         pointerEvents: 'none',
+    },
+    SnackWrapper: {
+        '&.accepted': {
+            backgroundColor: '#ff4081',
+            color: '#fff',
+        },
+        '&.banned': {
+            backgroundColor: '#555',
+            color: '#fff',
+        },
+    },
+    SnackContent: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 });
 

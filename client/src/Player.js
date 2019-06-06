@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import classNames from 'classnames';
+
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+
+import BlockIcon from '@material-ui/icons/Block';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import { withStyles } from '@material-ui/styles';
 
@@ -28,6 +35,13 @@ class Player extends Component {
             },
             stage: 'Main',
             questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'ready', '3': 'hidden'}),
+            snack: {
+                visibility: true,
+                content: {
+                    type: 'accepted',
+                    message: 'test',
+                },
+            }
             // questions: questions,
         }
     }
@@ -126,6 +140,7 @@ class Player extends Component {
 
     sendViewingCell (id) {
         console.log(['viewing', id]);
+        this.recvCellBanned(id);
     }
 
     recvViewingCell (id) {
@@ -142,26 +157,46 @@ class Player extends Component {
 
     recvCellBanned (id) {
         let myQuestions = questions.slice();
+        let questionName;
         myQuestions.forEach((round, index) => {
             if (round.roundid === '1') {
                 round.questions.forEach((question, index2) => {
-                    if (question.id === id) myQuestions[index].questions[index2].status = 'banned';
+                    if (question.id === id) {
+                        myQuestions[index].questions[index2].status = 'banned'
+                        questionName = question.title;
+                    };
                 });
             }
         });
         this.setState({questions: myQuestions});
+        this.setState({snack: this.createSnackMessage('banned', '問題' + questionName + 'が封鎖されました')});
     }
 
     recvAccepted (id) {
         let myQuestions = questions.slice();
+        let questionName;
         myQuestions.forEach((round, index) => {
             if (round.roundid === '1') {
                 round.questions.forEach((question, index2) => {
-                    if (question.id === id) myQuestions[index].questions[index2].status = 'accepted';
+                    if (question.id === id) {
+                        myQuestions[index].questions[index2].status = 'accepted'
+                        questionName = question.title;
+                    };
                 });
             }
         });
         this.setState({questions: myQuestions});
+        this.setState({snack: this.createSnackMessage('accepted', '問題' + questionName + 'に正解しました')});
+    }
+
+    createSnackMessage (type, message) { 
+        return {
+            visibility: true,
+            content: {
+                type: type,
+                message: message,
+            },
+        };
     }
 
     renderCover (msg) {
@@ -188,6 +223,7 @@ class Player extends Component {
         return (
             <Router basename='/tokusetsu/party2019'>
                 <Header questions={this.state.questions} team={this.state.team}/>
+                <MySnack snack={this.state.snack} classes={this.props.classes}/>
                 <Switch>
                     <Route exact path={prefix} render={(props) => {
                         return (
@@ -230,6 +266,70 @@ class Player extends Component {
             default:
                 return (this.renderMain());
         }
+    }
+}
+
+class MySnack extends Component {
+
+    constructor (props) {
+        super(props);
+        this.state = {
+            opened: false,
+        }
+        this.handleClose = this.handleClose.bind(this);
+    }
+
+    componentWillReceiveProps (nextProps) {
+        if (nextProps.snack.visibility) {
+            this.setState({opened: true});
+        }
+    }
+
+    handleClose () {
+        this.setState({opened: false});
+    }
+
+    render () {
+        let message = [];
+        switch (this.props.snack.content.type) {
+            case 'accepted':
+                message.push(<CheckCircleIcon key='icon'/>);
+                message.push(<span key='span'>{this.props.snack.content.message}</span>);
+                break;
+            case 'banned':
+                message.push(<BlockIcon key='icon'/>);
+                message.push(<span key='span'>{this.props.snack.content.message}</span>);
+                break;
+            default:
+                message.push(<span key='span'>{this.props.snack.content.message}</span>);
+        }
+        const myWrapperClass = classNames(
+            this.props.classes.SnackWrapper,
+            {
+                'accepted': this.props.snack.content.type === 'accepted',
+                'banned': this.props.snack.content.type === 'banned',
+            },
+        );
+        return (
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                open={this.state.opened}
+                autoHideDuration={3000}
+                onClose={this.handleClose}
+            >
+                <SnackbarContent
+                    className={myWrapperClass}
+                    message={
+                        <div className={this.props.classes.SnackContent} >
+                            {message}
+                        </div>
+                    }
+                />
+            </Snackbar>
+        );
     }
 }
 
