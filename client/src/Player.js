@@ -27,7 +27,7 @@ class Player extends Component {
                 visibility: false,
             },
             stage: 'Main',
-            questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'hidden', '3': 'hidden'}),
+            questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'ready', '3': 'hidden'}),
             // questions: questions,
         }
     }
@@ -146,6 +146,18 @@ class Player extends Component {
             if (round.roundid === '1') {
                 round.questions.forEach((question, index2) => {
                     if (question.id === id) myQuestions[index].questions[index2].status = 'banned';
+                });
+            }
+        });
+        this.setState({questions: myQuestions});
+    }
+
+    recvAccepted (id) {
+        let myQuestions = questions.slice();
+        myQuestions.forEach((round, index) => {
+            if (round.roundid === '1') {
+                round.questions.forEach((question, index2) => {
+                    if (question.id === id) myQuestions[index].questions[index2].status = 'accepted';
                 });
             }
         });

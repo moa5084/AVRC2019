@@ -7,6 +7,8 @@ import SendIcon from '@material-ui/icons/Send';
 
 import { withStyles } from '@material-ui/styles';
 
+import classNames from 'classnames';
+
 import 'typeface-roboto';
 
 import Styles from './Styles';
@@ -35,7 +37,7 @@ class AnswerSheet extends Component {
                 </div>
                 <div className={this.props.classes.QuestionWrapper}>
                     {this.props.question.leadSentence ? (<p>{this.props.question.leadSentence}</p>) : null}
-                    {this.props.question.status !== 'playing' && this.props.question.status !== 'finished' ? (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>)
+                    {this.props.question.status === 'hidden' || this.props.question.status === 'ready' ? (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>)
                      : this.props.question.img
                         ? (<img src={this.props.question.img} alt='loading' className={this.props.classes.img}/>)
                         : null
@@ -52,15 +54,54 @@ class AnswerSheet extends Component {
                                 value={this.state.answer}
                                 onChange={this.onChange}
                             />      
-                            <Button variant="contained" color="primary" className={this.props.classes.submitButton} onClick={() => {if (this.props.sendFunction) this.props.sendFunction(this.props.question.id, this.state.answer)}} >
+                            <Button variant="contained" color="primary" className={this.props.classes.submitButton} onClick={() => {if (this.props.sendFunction) this.props.sendFunction(this.props.question.id, this.state.answer);}} >
                                 <SendIcon />
                             </Button>
                         </div>
-                    ) : null
+                    ) : (
+                        <div className={this.props.classes.Form}>
+                            <MessageBox classes={this.props.classes} status={this.props.question.status}/>
+                        </div>
+                    )
                 }
                 <div className={this.props.classes.Footer}>
                     <img src='http://juicy-apple.fun/av/AVRC2019/images/AVRC2018_Logo.png' alt='loading' className={this.props.classes.footerImg}/>
                 </div>
+            </div>
+        );
+    }
+}
+
+class MessageBox extends Component {
+    render () {
+        const myClass = classNames(
+            this.props.classes.FormMessageBox,
+            {
+                'accepted': this.props.status === 'accepted',
+                'banned': this.props.status === 'banned',
+                'finished': this.props.status === 'finished',
+            },
+        )
+        let content;
+        switch (this.props.status) {
+            case 'accepted':
+                content = ('正解しました');
+                break;
+            case 'ready':
+            case 'hidden':
+                content = ('まもなくスタート');
+                break;
+            case 'banned':
+                content = ('封鎖されました');
+                break;
+            case 'finished':
+                content = ('解答受付は終了しました');
+                break;
+            default:
+        }
+        return (
+            <div className={myClass}>
+                {content}
             </div>
         );
     }

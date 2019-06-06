@@ -168,6 +168,25 @@ const Styles = (theme) => ({
         width: '100%',
         display: 'flex',
     },
+    FormMessageBox: {
+        width: '100%',
+        height: '50px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '5px',
+        backgroundColor: 'rgba(200, 200, 200, 0.6)',
+        '&.accepted': {
+            border: '#ff4081 1px solid',
+            boxShadow: 'inset 0 0 5px 0 #ff4081',
+            backgroundColor: 'rgba(255, 64, 129, 0.3)',
+        },
+        '&.banned': {
+            border: '#555 1px solid',
+            boxShadow: 'inset 0 0 5px 0 #555',
+            backgroundColor: 'rgba(85, 85, 85, 0.3)',
+        },
+    },
     answerField: {
         flexGrow: '5',
     },
