@@ -14,7 +14,7 @@ class RoundMenu extends Component {
                     this.props.classes.QuestionLinkBlock,
                     {
                         'ready': item.status === 'ready',
-                        'teammateViewing': item.status === 'teammateViewing',
+                        'teammateViewing': item.status === 'playing' && item.teammateViewing,
                         'banned': item.status === 'banned',
                         'accepted': item.status === 'accepted',
                         'playing': item.status === 'playing',
@@ -25,7 +25,7 @@ class RoundMenu extends Component {
                         <div className={blockClass}>
                             {item.status === 'accepted' ? (<img  src={'https://juicy-apple.fun/av/AVRC2019/images/BingoBox/BingoBlockAccepted.svg'} alt='noimg' className={this.props.classes.QuestionLinkImgResult} />) : false}
                             {item.status === 'banned' ? (<img  src={'https://juicy-apple.fun/av/AVRC2019/images/BingoBox/BingoBlockBanned.svg'} alt='noimg' className={this.props.classes.QuestionLinkImgResult} />) : false}
-                            <Link to={'/Newcomer/' + this.props.round.roundid + '/' + item.id} className={this.props.classes.QuestionLink}>
+                            <Link to={'/Newcomer/' + this.props.round.roundid + '/' + item.id} className={this.props.classes.QuestionLink} onClick={()=>{if (this.props.viewingFunction) this.props.viewingFunction(item.id);}}>
                                 <img src={'https://juicy-apple.fun/av/AVRC2019/images/BingoBox/BingoBlock' + index + '.svg'} alt='noimg' className={this.props.classes.QuestionLinkImg}/>
                             </Link>
                         </div>

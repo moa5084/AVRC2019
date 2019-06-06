@@ -15,12 +15,16 @@ const ImageSrc = 'https://juicy-apple.fun/av/AVRC2019/images/';
 class Player extends Component {
     constructor (props) {
         super(props);
+        let cookieValue_playername;
+        if (document.cookie.split(';').filter((item) => item.trim().startsWith('playername=')).length) {
+            cookieValue_playername = document.cookie.replace(/(?:(?:^|.*;\s*)playername\s*=\s*([^;]*).*$)|^.*$/, "$1");
+        }
         this.state = {
             team: {
                 teamName: 'アナザーピジョン',
-                myName: 'アナザー',
+                myName: cookieValue_playername || 'no name',
                 teammateName: 'ピジョン',
-                visibility: true,
+                visibility: false,
             },
             stage: 'Main',
             questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'hidden', '3': 'hidden'}),
@@ -104,6 +108,38 @@ class Player extends Component {
         return (res.length > 0 ? res[0] : null);
     }
 
+    registerName (name) {
+        console.log(['name', name]);
+        document.cookie = 'playername=' + name + ';max-age=' + 60 * 60 * 5;
+        let myTeam = this.state.team;
+        myTeam.myName = name;
+        this.setState({team: myTeam});
+    }
+
+    sendAnswer (id, answer) {
+        console.log([id, answer]);
+    }
+
+    sendTeamName (name) {
+        console.log(['teamName', name]);
+    }
+
+    sendViewingCell (id) {
+        console.log(['viewing', id]);
+    }
+
+    recvViewingCell (id) {
+        let myQuestions = questions.slice();
+        myQuestions.forEach((round, index) => {
+            if (round.roundid === '1') {
+                round.questions.forEach((question, index2) => {
+                    myQuestions[index].questions[index2].teammateViewing = question.id === id;
+                });
+            }
+        });
+        this.setState({questions: myQuestions});
+    }
+
     renderCover (msg) {
         let messages = [];
         msg.forEach((item, index) => {
@@ -119,7 +155,8 @@ class Player extends Component {
 
     renderForm (type) {
         const myQuestion = this.searchQuestion(type);
-        return (<AnswerSheet question={myQuestion} sendFunction={(ans) =>{console.log(ans);}}/>);
+        if (type === 102) return (<AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.sendTeamName(ans);}}/>);
+        return (<AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.registerName(ans);}}/>);
     }
 
     renderMain () {
@@ -136,13 +173,13 @@ class Player extends Component {
                     <Route exact path={prefix + '/:round'} render={(props) => {
                         const myRound = this.searchRound(props.match.params.round);
                         return (
-                            <RoundMenu round={myRound} />
+                            <RoundMenu round={myRound} viewingFunction={(id) => {this.sendViewingCell(id);}}/>
                         );
                     }}/>
                     <Route exact path={prefix + '/:round/:question'} render={(props) => {
-                        const myQuestion = this.searchQuestion(props.match.params.question);
+                        const myQuestion = this.searchQuestion(Number(props.match.params.question));
                         return (
-                            <AnswerSheet question={myQuestion} />
+                            <AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.sendAnswer(id, ans);}}/>
                         );
                     }}/>
                 </Switch>
@@ -152,8 +189,8 @@ class Player extends Component {
 
     render () {
         let cookieValue_playeruuid;
-        if (document.cookie.split(';').filter((item) => item.trim().startsWith('playeruuid=')).length) {
-            cookieValue_playeruuid = document.cookie.replace(/(?:(?:^|.*;\s*)playeruuid\s*=\s*([^;]*).*$)|^.*$/, "$1");
+        if (document.cookie.split(';').filter((item) => item.trim().startsWith('playername=')).length) {
+            cookieValue_playeruuid = document.cookie.replace(/(?:(?:^|.*;\s*)playername\s*=\s*([^;]*).*$)|^.*$/, "$1");
         }
         switch (this.state.stage) {
             case 'BeforeInitialization':
@@ -162,10 +199,10 @@ class Player extends Component {
                 if (cookieValue_playeruuid) {
                     return (this.renderCover(['参加登録が完了しました', 'このページへは現在使っているブラウザ以外ではアクセスしないでください']));
                 } else {
-                    return (this.renderForm('Entry'));
+                    return (this.renderForm(101));
                 }
             case 'TeamRegistration':
-                    return (this.renderForm('TEntry'));
+                    return (this.renderForm(102));
             default:
                 return (this.renderMain());
         }
