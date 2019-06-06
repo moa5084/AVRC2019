@@ -29,7 +29,7 @@ class PlayerHome extends Component {
                     <div className={WrapperClass} key={'QuestionLinkWrapper_' + item.roundid}>
                         <div className={blockClass}>
                             <Link to={'/Newcomer/' + item.roundid} className={linkClass}>
-                                {item.title}
+                                <img src={'https://juicy-apple.fun/av/AVRC2019/images/Round/RoundBanner' + item.roundid + '.svg'} alt='noimg' className={this.props.classes.QuestionLinkImg}/>
                             </Link>
                         </div>
                     </div>

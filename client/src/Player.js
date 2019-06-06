@@ -34,7 +34,7 @@ class Player extends Component {
                 teammateName: 'ピジョン',
                 visibility: false,
             },
-            stage: 'TeamRegistration',
+            stage: 'Main',
             questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'ready', '3': 'hidden'}),
             snack: {
                 visibility: true,
