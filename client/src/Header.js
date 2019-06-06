@@ -3,11 +3,22 @@ import { Route, Switch, Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/styles';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import PersonIcon from '@material-ui/icons/Person';
+import PeopleIcon from '@material-ui/icons/People';
 
 import Styles from './Styles';
 
 class Header extends Component {
     render () {
+        const teamData = this.props.team.visibility ? (
+            <div className={this.props.classes.HeaderTeamWrapper}>
+                <PeopleIcon />{this.props.team.teamName}
+            </div>
+        ) : (
+            <div className={this.props.classes.HeaderTeamWrapper}>
+                <PersonIcon />{this.props.team.myName}
+            </div>
+        );
         return (
             <div className={this.props.classes.Header}>
                 <div className={this.props.classes.HeaderBackWrapper}>
@@ -34,6 +45,7 @@ class Header extends Component {
                         }} />
                     </Switch>
                 </div>
+                {teamData}
             </div>
         );
     }

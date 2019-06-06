@@ -18,7 +18,9 @@ class Player extends Component {
         this.state = {
             team: {
                 teamName: 'アナザーピジョン',
-                members: ['アナザー', 'ピジョン'],
+                myName: 'アナザー',
+                teammateName: 'ピジョン',
+                visibility: true,
             },
             stage: 'Main',
             questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'hidden', '3': 'hidden'}),
@@ -112,7 +114,7 @@ class Player extends Component {
         const prefix = this.props.type === 'A' ? '/Newcomer' : '/NewComer';
         return (
             <Router basename='/tokusetsu/party2019'>
-                <Header questions={this.state.questions}/>
+                <Header questions={this.state.questions} team={this.state.team}/>
                 <Switch>
                     <Route exact path={prefix} render={(props) => {
                         return (
