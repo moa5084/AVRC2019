@@ -7,6 +7,7 @@ import SnackbarContent from '@material-ui/core/SnackbarContent';
 
 import BlockIcon from '@material-ui/icons/Block';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 import { withStyles } from '@material-ui/styles';
 
@@ -33,7 +34,7 @@ class Player extends Component {
                 teammateName: 'ピジョン',
                 visibility: false,
             },
-            stage: 'Main',
+            stage: 'TeamRegistration',
             questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'ready', '3': 'hidden'}),
             snack: {
                 visibility: true,
@@ -123,11 +124,15 @@ class Player extends Component {
     }
 
     registerName (name) {
-        console.log(['name', name]);
-        document.cookie = 'playername=' + name + ';max-age=' + 60 * 60 * 5;
-        let myTeam = this.state.team;
-        myTeam.myName = name;
-        this.setState({team: myTeam});
+        if (name.length > 0) {
+            document.cookie = 'playername=' + name + ';max-age=' + 60 * 60 * 5;
+            let myTeam = this.state.team;
+            myTeam.myName = name;
+            this.setState({team: myTeam});
+            this.setState({snack: this.createSnackMessage('completed', '名前を登録しました')});
+        } else {
+            this.setState({snack: this.createSnackMessage('error', '名前は1文字以上で入力してください')});
+        }
     }
 
     sendAnswer (id, answer) {
@@ -135,12 +140,16 @@ class Player extends Component {
     }
 
     sendTeamName (name) {
-        console.log(['teamName', name]);
+        if (name.length > 0) {
+            this.setState({snack: this.createSnackMessage('completed', 'チーム名[' + name + ']を登録しました')});
+        } else {
+            this.setState({snack: this.createSnackMessage('error', 'チーム名は1文字以上で入力してください')});
+        }
     }
 
     sendViewingCell (id) {
         console.log(['viewing', id]);
-        this.recvCellBanned(id);
+        this.recvAccepted(id);
     }
 
     recvViewingCell (id) {
@@ -214,8 +223,15 @@ class Player extends Component {
 
     renderForm (type) {
         const myQuestion = this.searchQuestion(type);
-        if (type === 102) return (<AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.sendTeamName(ans);}}/>);
-        return (<AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.registerName(ans);}}/>);
+        let sheet;
+        if (type === 102) sheet = (<AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.sendTeamName(ans);}}/>);
+        else sheet = (<AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.registerName(ans);}}/>);
+        return (
+            <Router basename='/tokusetsu/party2019'>
+                <MySnack snack={this.state.snack} classes={this.props.classes}/>
+                {sheet}
+            </Router>
+        )
     }
 
     renderMain () {
@@ -293,11 +309,16 @@ class MySnack extends Component {
         let message = [];
         switch (this.props.snack.content.type) {
             case 'accepted':
+            case 'completed':
                 message.push(<CheckCircleIcon key='icon'/>);
                 message.push(<span key='span'>{this.props.snack.content.message}</span>);
                 break;
             case 'banned':
                 message.push(<BlockIcon key='icon'/>);
+                message.push(<span key='span'>{this.props.snack.content.message}</span>);
+                break;
+            case 'error':
+                message.push(<ErrorIcon key='icon'/>);
                 message.push(<span key='span'>{this.props.snack.content.message}</span>);
                 break;
             default:
@@ -307,7 +328,9 @@ class MySnack extends Component {
             this.props.classes.SnackWrapper,
             {
                 'accepted': this.props.snack.content.type === 'accepted',
+                'completed': this.props.snack.content.type === 'completed',
                 'banned': this.props.snack.content.type === 'banned',
+                'error': this.props.snack.content.type === 'error',
             },
         );
         return (

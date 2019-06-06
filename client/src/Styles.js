@@ -303,6 +303,14 @@ const Styles = (theme) => ({
             backgroundColor: '#555',
             color: '#fff',
         },
+        '&.completed': {
+            backgroundColor: '#00e676',
+            color: '#000',
+        },
+        '&.error': {
+            backgroundColor: '#d50000',
+            color: '#fff',
+        },
     },
     SnackContent: {
         display: 'flex',
