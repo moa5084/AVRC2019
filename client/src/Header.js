@@ -30,7 +30,7 @@ class Header extends Component {
 
     render () {
         let teamData;
-        if (this.props.team.visibility) {
+        if ((this.props.type === 'A' || this.props.type === 'B') && this.props.team.visibility) {
             switch (this.state.index) {
                 case 1:
                     teamData = (
@@ -61,28 +61,19 @@ class Header extends Component {
                 </div>
             );
         }
+        const prefix = this.props.type === 'A' ? '/Newcomer' : (this.props.type === 'B' ? '/NewComer' : '/Senior');
         return (
             <div className={this.props.classes.Header}>
                 <div className={this.props.classes.HeaderBackWrapper}>
                     <Switch>
-                        <Route exact path='/Newcomer/:round' render={props => {
+                        <Route exact path={prefix + '/:round'} render={props => {
                             return (
-                                <Link to='/Newcomer' className={this.props.classes.HeaderBackButton}><KeyboardArrowLeftIcon className={this.props.classes.HeaderBackArrow}/>ホーム画面へ</Link>
+                                <Link to={prefix} className={this.props.classes.HeaderBackButton}><KeyboardArrowLeftIcon className={this.props.classes.HeaderBackArrow}/>ホーム画面へ</Link>
                             );
                         }} />
-                        <Route exact path='/NewComer/:round' render={props => {
+                        <Route exact path={prefix + '/:round/:id'} render={props => {
                             return (
-                                <Link to='/NewComer' className={this.props.classes.HeaderBackButton}><KeyboardArrowLeftIcon  className={this.props.classes.HeaderBackArrow}/>ホーム画面へ</Link>
-                            );
-                        }} />
-                        <Route exact path='/Newcomer/:round/:id' render={props => {
-                            return (
-                                <Link to={'/Newcomer/' + props.match.params.round} className={this.props.classes.HeaderBackButton}><KeyboardArrowLeftIcon  className={this.props.classes.HeaderBackArrow}/>問題選択へ</Link>
-                            );
-                        }} />
-                        <Route exact path='/NewComer/:round/:id' render={props => {
-                            return (
-                                <Link to={'/NewComer/' + props.match.params.round} className={this.props.classes.HeaderBackButton}><KeyboardArrowLeftIcon  className={this.props.classes.HeaderBackArrow}/>問題選択へ</Link>
+                                <Link to={prefix + '/' + props.match.params.round} className={this.props.classes.HeaderBackButton}><KeyboardArrowLeftIcon  className={this.props.classes.HeaderBackArrow}/>問題選択へ</Link>
                             );
                         }} />
                     </Switch>

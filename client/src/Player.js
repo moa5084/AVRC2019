@@ -33,12 +33,12 @@ class Player extends Component {
                 teamName: 'アナザーピジョン',
                 myName: cookieValue_playername || 'no name',
                 teammateName: 'ピジョン',
-                visibility: false,
+                visibility: true,
             },
             stage: 'Main',
-            questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'ready', '3': 'hidden'}),
+            questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'ready', '3': 'ready'}),
             snack: {
-                visibility: true,
+                visibility: false,
                 content: {
                     type: 'accepted',
                     message: 'test',
@@ -139,6 +139,7 @@ class Player extends Component {
 
     sendAnswer (id, answer) {
         console.log([id, answer]);
+        this.recvCellBanned(id);
     }
 
     sendTeamName (name) {
@@ -151,7 +152,6 @@ class Player extends Component {
 
     sendViewingCell (id) {
         console.log(['viewing', id]);
-        this.recvAccepted(id);
     }
 
     recvViewingCell (id) {
@@ -237,21 +237,21 @@ class Player extends Component {
     }
 
     renderMain () {
-        const prefix = this.props.type === 'A' ? '/Newcomer' : '/NewComer';
+        const prefix = this.props.type === 'A' ? '/Newcomer' : (this.props.type === 'B' ? '/NewComer' : '/Senior');
         return (
             <Router basename='/tokusetsu/party2019'>
-                <Header questions={this.state.questions} team={this.state.team}/>
+                <Header questions={this.state.questions} team={this.state.team} type={this.props.type}/>
                 <MySnack snack={this.state.snack} classes={this.props.classes}/>
                 <Switch>
                     <Route exact path={prefix} render={(props) => {
                         return (
-                            <PlayerHome questions={this.state.questions} />
+                            <PlayerHome questions={this.state.questions} type={this.props.type}/>
                         );
                     }}/>
                     <Route exact path={prefix + '/:round'} render={(props) => {
                         const myRound = this.searchRound(props.match.params.round);
                         return (
-                            <RoundMenu round={myRound} viewingFunction={(id) => {this.sendViewingCell(id);}}/>
+                            <RoundMenu round={myRound} viewingFunction={(id) => {this.sendViewingCell(id);}} type={this.props.type}/>
                         );
                     }}/>
                     <Route exact path={prefix + '/:round/:question'} render={(props) => {

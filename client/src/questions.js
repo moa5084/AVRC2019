@@ -299,7 +299,7 @@ const questions = [
         questions: [
             {
                 id: 40,
-                title: '[Z]',
+                title: '[Revival]',
                 roundid: '3',
                 type: 'question',
                 img: 'https://juicy-apple.fun/av/AVRC2019/images/Final-2.png',

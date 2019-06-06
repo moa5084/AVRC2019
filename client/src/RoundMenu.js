@@ -7,6 +7,7 @@ import Styles from './Styles';
 
 class RoundMenu extends Component {
     render () {
+        const prefix = this.props.type === 'A' ? '/Newcomer' : (this.props.type === 'B' ? '/NewComer' : '/Senior');
         let links = [];
         if (this.props.round.roundid === '1') {
             this.props.round.questions.forEach((item, index) => {
@@ -25,7 +26,7 @@ class RoundMenu extends Component {
                         <div className={blockClass}>
                             {item.status === 'accepted' ? (<img  src={'https://juicy-apple.fun/av/AVRC2019/images/BingoBox/BingoBlockAccepted.svg'} alt='noimg' className={this.props.classes.QuestionLinkImgResult} />) : false}
                             {item.status === 'banned' ? (<img  src={'https://juicy-apple.fun/av/AVRC2019/images/BingoBox/BingoBlockBanned.svg'} alt='noimg' className={this.props.classes.QuestionLinkImgResult} />) : false}
-                            <Link to={'/Newcomer/' + this.props.round.roundid + '/' + item.id} className={this.props.classes.QuestionLink} onClick={()=>{if (this.props.viewingFunction) this.props.viewingFunction(item.id);}}>
+                            <Link to={prefix + '/' + this.props.round.roundid + '/' + item.id} className={this.props.classes.QuestionLink} onClick={()=>{if (this.props.viewingFunction) this.props.viewingFunction(item.id);}}>
                                 <img src={'https://juicy-apple.fun/av/AVRC2019/images/BingoBox/BingoBlock' + index + '.svg'} alt='noimg' className={this.props.classes.QuestionLinkImg}/>
                             </Link>
                         </div>
@@ -53,7 +54,7 @@ class RoundMenu extends Component {
                 links.push(
                     <div className={WrapperClass} key={'QuestionLinkWrapper_' + item.id}>
                         <div className={blockClass}>
-                            <Link to={'/Newcomer/' + this.props.round.roundid + '/' + item.id} className={linkClass}>
+                            <Link to={prefix + '/' + this.props.round.roundid + '/' + item.id} className={linkClass}>
                                 {item.title}
                             </Link>
                         </div>

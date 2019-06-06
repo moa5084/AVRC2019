@@ -7,6 +7,7 @@ import Styles from './Styles';
 
 class PlayerHome extends Component {
     render () {
+        const prefix = this.props.type === 'A' ? '/Newcomer' : (this.props.type === 'B' ? '/NewComer' : '/Senior');
         let links = [];
         this.props.questions.forEach(item => {
             if (item.type === 'question' && item.status !== 'hidden') {
@@ -28,7 +29,7 @@ class PlayerHome extends Component {
                 links.push(
                     <div className={WrapperClass} key={'QuestionLinkWrapper_' + item.roundid}>
                         <div className={blockClass}>
-                            <Link to={'/Newcomer/' + item.roundid} className={linkClass}>
+                            <Link to={prefix + '/' + item.roundid} className={linkClass}>
                                 <img src={'https://juicy-apple.fun/av/AVRC2019/images/Round/RoundBanner' + item.roundid + '.svg'} alt='noimg' className={this.props.classes.QuestionLinkImg}/>
                             </Link>
                         </div>

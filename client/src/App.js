@@ -108,6 +108,11 @@ function Main() {
               <Player type='B' />
             );
           }}/>
+          <Route path='/Senior' render={(props) => {
+            return (
+              <Player type='C' />
+            );
+          }}/>
         </Switch>
       </Router>
     </div>
