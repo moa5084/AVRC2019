@@ -4,6 +4,7 @@ const questions = [
         roundid: '0',
         title: 'Forms',
         status: 'playing',
+        type: 'form',
         questions: [
             {
                 id: 'Entry',
@@ -29,6 +30,7 @@ const questions = [
         roundid: '1',
         title: '1st Round',
         status: 'playing',
+        type: 'question',
         questions: [
             {
                 id: 'A',
@@ -236,6 +238,7 @@ const questions = [
         roundid: '2',
         title: '2nd Round',
         status: 'ready',
+        type: 'question',
         questions: [
             {
                 id: 'alpha',
@@ -267,6 +270,7 @@ const questions = [
         roundid: '3',
         title: 'Extra Round',
         status: 'playing',
+        type: 'question',
         questions: [
             {
                 id: 'Z',

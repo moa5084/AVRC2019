@@ -10,6 +10,8 @@ import questions from './questions';
 import Header from './Header';
 import Styles from './Styles';
 
+const ImageSrc = 'https://juicy-apple.fun/av/AVRC2019/images/';
+
 class Player extends Component {
     constructor (props) {
         super(props);
@@ -18,6 +20,7 @@ class Player extends Component {
                 teamName: 'アナザーピジョン',
                 members: ['アナザー', 'ピジョン'],
             },
+            stage: 'Main',
             questions: questions,
         }
     }
@@ -40,7 +43,25 @@ class Player extends Component {
         return (res.length > 0 ? res[0] : null);
     }
 
-    render () {
+    renderCover (msg) {
+        let messages = [];
+        msg.forEach((item, index) => {
+            messages.push((<p key={'CoverMessageP_' + index}>{item}</p>));
+        });
+        return (
+            <div className={this.props.classes.MessageCover} >
+                <img src={ImageSrc + 'AVLogo.png'} alt='noimg' className={this.props.classes.CoverLogo}/>
+                <div className={this.props.classes.CoverText}>{messages}</div>
+            </div>
+        );
+    }
+
+    renderForm (type) {
+        const myQuestion = this.searchQuestion(type);
+        return (<AnswerSheet question={myQuestion} sendFunction={(ans) =>{console.log(ans);}}/>);
+    }
+
+    renderMain () {
         const prefix = this.props.type === 'A' ? '/Newcomer' : '/NewComer';
         return (
             <Router basename='/tokusetsu/party2019'>
@@ -66,6 +87,27 @@ class Player extends Component {
                 </Switch>
             </Router>
         );
+    }
+
+    render () {
+        let cookieValue_playeruuid;
+        if (document.cookie.split(';').filter((item) => item.trim().startsWith('playeruuid=')).length) {
+            cookieValue_playeruuid = document.cookie.replace(/(?:(?:^|.*;\s*)playeruuid\s*=\s*([^;]*).*$)|^.*$/, "$1");
+        }
+        switch (this.state.stage) {
+            case 'BeforeInitialization':
+                return (this.renderCover(['しばらくお待ちください']));
+            case 'UserRegistration':
+                if (cookieValue_playeruuid) {
+                    return (this.renderCover(['参加登録が完了しました', 'このページへは現在使っているブラウザ以外ではアクセスしないでください']));
+                } else {
+                    return (this.renderForm('Entry'));
+                }
+            case 'TeamRegistration':
+                    return (this.renderForm('TEntry'));
+            default:
+                return (this.renderMain());
+        }
     }
 }
 

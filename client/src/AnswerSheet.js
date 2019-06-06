@@ -52,7 +52,7 @@ class AnswerSheet extends Component {
                                 value={this.state.answer}
                                 onChange={this.onChange}
                             />      
-                            <Button variant="contained" color="primary" className={this.props.classes.submitButton}>
+                            <Button variant="contained" color="primary" className={this.props.classes.submitButton} onClick={() => {if (this.props.sendFunction) this.props.sendFunction(this.state.answer)}} >
                                 <SendIcon />
                             </Button>
                         </div>
