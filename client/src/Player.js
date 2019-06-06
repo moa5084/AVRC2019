@@ -140,6 +140,18 @@ class Player extends Component {
         this.setState({questions: myQuestions});
     }
 
+    recvCellBanned (id) {
+        let myQuestions = questions.slice();
+        myQuestions.forEach((round, index) => {
+            if (round.roundid === '1') {
+                round.questions.forEach((question, index2) => {
+                    if (question.id === id) myQuestions[index].questions[index2].status = 'banned';
+                });
+            }
+        });
+        this.setState({questions: myQuestions});
+    }
+
     renderCover (msg) {
         let messages = [];
         msg.forEach((item, index) => {
