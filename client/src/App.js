@@ -113,6 +113,11 @@ function Main() {
               <Player type='C' />
             );
           }}/>
+          <Route path='/Presenter' render={(props) => {
+            return (
+              <Player type='C' />
+            );
+          }}/>
         </Switch>
       </Router>
     </div>
