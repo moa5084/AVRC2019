@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
 
 import Styles from './Styles';
+import questions from './questions';
 import { Stage } from 'avrcclient';
 
 class Presenter extends Component {
@@ -114,6 +115,70 @@ class Presenter extends Component {
                 return false;
         }
     }
+    searchQuestion (id) {
+        let res = [];
+        questions.forEach(round => {
+            round.questions.forEach(q => {
+                if (q.id === id) res.push(q);
+            });
+        });
+        return (res.length > 0 ? res[0] : null);
+    }
+
+    getMainContents (st) {
+        let src;
+        switch (st) {
+            case Stage.BeforeStart:
+                return false;
+            case Stage.UserRegistration:
+                return false;
+            case Stage.TeamMaking:
+                return false;
+            case Stage.BeforeFirst:
+                return false;
+            case Stage.First:
+                return false;
+            case Stage.AfterFirst:
+                return false;
+            case Stage.TeamRegistration:
+                return false;
+            case Stage.BeforeSecondAlpha:
+                return (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>);
+            case Stage.SecondAlpha:
+                src = this.searchQuestion(101).img;
+                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+            case Stage.AfterSecondAlpha:
+                src = this.searchQuestion(101).img;
+                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+            case Stage.BeforeSecondBeta:
+                return (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>);
+            case Stage.SecondBeta:
+                src = this.searchQuestion(102).img;
+                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+            case Stage.AfterSecondBeta:
+                src = this.searchQuestion(102).img;
+                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+            case Stage.BeforeSecondGamma:
+                return (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>);
+            case Stage.SecondGamma:
+                src = this.searchQuestion(103).img;
+                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+            case Stage.AfterSecondGamma:
+                src = this.searchQuestion(103).img;
+                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+            case Stage.BeforeRevival:
+                return (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>);
+            case Stage.Revival:
+                src = this.searchQuestion(201).img;
+                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+            case Stage.AfterRevival:
+                src = this.searchQuestion(201).img;
+                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+            default:
+                return false;
+        }
+
+    }
 
     render () {
         return (
@@ -126,6 +191,11 @@ class Presenter extends Component {
                         <div className={this.props.classes.PresenterMenuNext}>
                             {this.getNextButton(this.state.stage)}
                         </div>
+                    </div>
+                </div>
+                <div className={this.props.classes.PresenterMain}>
+                    <div className={this.props.classes.QuestionWrapper}>
+                        {this.getMainContents(this.state.stage)}
                     </div>
                 </div>
             </div>

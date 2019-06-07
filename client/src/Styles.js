@@ -194,10 +194,6 @@ const Styles = (theme) => ({
         flexGrow: '1',
         margin: '0 3%',
     },
-    ControlButton: {
-        width: '40%',
-        margin: '0 3%',
-    },
     Footer: {
         width: '100%',
         minHeight: '10px',
@@ -324,7 +320,33 @@ const Styles = (theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    PresenterMenu: {
+        display: 'flex',
+        width: '30%',
+    },
+    PresenterMain: {
+        display: 'flex',
+        width: '70%',
+    },
+    PresenterMenuHeader: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        width: '100%',
+    },
+    PresenterMenuTitle: {
+        width: '100%',
+        textAlign: 'center',
+        fontSize: 'large',
+    },
+    PresenterMenuNext: {
+        width: '100%',
+    },
+    ControlButton: {
+        width: '90%',
+        margin: '0 3%',
+    },
 });
 
 export default Styles;
