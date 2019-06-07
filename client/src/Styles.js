@@ -194,6 +194,10 @@ const Styles = (theme) => ({
         flexGrow: '1',
         margin: '0 3%',
     },
+    ControlButton: {
+        width: '40%',
+        margin: '0 3%',
+    },
     Footer: {
         width: '100%',
         minHeight: '10px',
