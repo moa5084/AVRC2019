@@ -133,6 +133,7 @@ const Styles = (theme) => ({
         padding: '10px',
         display: 'flex',
         flexWrap: 'wrap',
+        justifyContent: 'center',
         '&::before': {
             content: '""',
             width: '20px',
@@ -221,6 +222,25 @@ const Styles = (theme) => ({
                 paddingTop: '20%',
             },
         }
+    },
+    BingoCardWrapper: {
+        width: '70%',
+        position: 'relative',
+        '&::before': {
+            content: '""',
+            display: 'block',
+            width: '100%',
+            paddingTop: '100%',
+        },
+    },
+    BingoCard: {
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexWrap: 'wrap',
     },
     '@keyframes Block-playing': {
         '0%': {

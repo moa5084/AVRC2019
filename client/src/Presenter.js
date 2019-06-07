@@ -243,11 +243,11 @@ class Presenter extends Component {
             case Stage.TeamMaking:
                 return false;
             case Stage.BeforeFirst:
-                return this.getBingoCard();
+                return (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
             case Stage.First:
-                return this.getBingoCard();
+                return (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
             case Stage.AfterFirst:
-                return this.getBingoCard();
+                return (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
             case Stage.TeamRegistration:
                 return false;
             case Stage.BeforeSecondAlpha:
@@ -317,6 +317,18 @@ class Presenter extends Component {
             }
         });
         return links.slice();
+    }
+
+    recvCellBanned (id) {
+        let myQuestions = this.state.questions.slice();
+        myQuestions.forEach((round, index) => {
+            if (round.roundid === '1') {
+                round.questions.forEach((question, index2) => {
+                    if (question.id === id) myQuestions[index].questions[index2].status = myQuestions[index].questions[index2].status === 'accepted' ? 'accepted' : 'banned';
+                });
+            }
+        });
+        this.setState({questions: myQuestions});
     }
 
     render () {
