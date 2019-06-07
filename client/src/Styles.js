@@ -311,6 +311,10 @@ const Styles = (theme) => ({
             backgroundColor: '#d50000',
             color: '#fff',
         },
+        '&.wrong': {
+            backgroundColor: '#2962ff',
+            color: '#fff',
+        },
     },
     SnackContent: {
         display: 'flex',

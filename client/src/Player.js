@@ -6,6 +6,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 
 import BlockIcon from '@material-ui/icons/Block';
+import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 
@@ -17,9 +18,11 @@ import RoundMenu from './RoundMenu';
 import questions from './questions';
 import Header from './Header';
 import Styles from './Styles';
-import { AVRCClient } from 'avrcclient';
+import { AVRCClient, Stage } from 'avrcclient';
 
 const ImageSrc = 'https://juicy-apple.fun/av/AVRC2019/images/';
+
+let client;
 
 class Player extends Component {
     constructor (props) {
@@ -35,7 +38,7 @@ class Player extends Component {
                 teammateName: 'ピジョン',
                 visibility: true,
             },
-            stage: 'Main',
+            stage: Stage.UserRegistration,
             questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'ready', '3': 'ready'}),
             snack: {
                 visibility: false,
@@ -43,10 +46,43 @@ class Player extends Component {
                     type: 'accepted',
                     message: 'test',
                 },
-            }
+            },
             // questions: questions,
         }
-        let client = new AVRCClient();
+        if (cookieValue_playername) this.initializeClient(cookieValue_playername);
+        else this.initializeClient('林檎');
+    }
+
+    initializeClient(name) {
+        client = new AVRCClient(name);
+        client.on('connected', (d) => {
+            const myQuestions = this.initializeQuestions(d);
+            let myTeam = this.state.team;
+            myTeam.teamName = d.teamname;
+            myTeam.teammateName = d.teammate;
+            this.setState({questions: myQuestions, team: myTeam});
+        });
+        client.on('cell open', (d) => {
+            this.recvViewingCell(d.cellid);
+        });
+        client.on('cell banned', (d) => {
+            this.recvCellBanned(d.cellid);
+        });
+        client.on('problem answered', (d) => {
+            this.recvAnswered(d.problemid);
+        });
+        client.on('bingo', (d) => {
+            this.setState({snack: this.createSnackMessage('accepted', 'ビンゴを達成しました！')});
+        });
+        client.on('connection error', (d) => {
+            this.setState({snack: this.createSnackMessage('error', 'サーバへの接続に失敗しました (Connection Error)')});
+        });
+        client.connect()
+            .then(() => {
+                this.setState({snack: this.createSnackMessage('completed', 'ようこそ、' + name + 'さん！')});
+            }).catch(() => {
+                this.setState({snack: this.createSnackMessage('error', 'エラー：サーバへの接続に失敗しました')});
+            });
     }
 
     getRestatusedQuestions (questions, statusObject) {
@@ -74,37 +110,131 @@ class Player extends Component {
         return myQuestions;
     }
 
-    onStageChange (st) {
-        switch (st) {
-            case 'BeforeFirst':
-                this.setState({questions: this.getRestatusedQuestions(this.state.questions, {'1': 'ready', '2': 'hidden', '3': 'hidden'})});
+    initializeQuestions (data) {
+        let myQuestions = this.state.questions.slice();
+        myQuestions = this.onStageChange(myQuestions, data.stage);
+        switch (data.stage) {
+            case Stage.First:
+                myQuestions = this.reinitializeFirstQuestions(data, myQuestions);
                 break;
-            case 'First':
-                this.setState({questions: this.getRestatusedQuestions(this.state.questions, {'1': 'playing', '2': 'hidden', '3': 'hidden'})});
+            case Stage.SecondAlpha:
+                if (data.sent) myQuestions = this.restatusQuestion(myQuestions, 101, 'sent');
                 break;
-            case 'AfterFirst':
-                this.setState({questions: this.getRestatusedQuestions(this.state.questions, {'1': 'finished', '2': 'hidden', '3': 'hidden'})});
+            case Stage.SecondBeta:
+                if (data.sent) myQuestions = this.restatusQuestion(myQuestions, 102, 'sent');
                 break;
-            case 'BeforeSecond':
-                this.setState({questions: this.getRestatusedQuestions(this.state.questions, {'1': 'finished', '2': 'ready', '3': 'hidden'})});
+            case Stage.SecondGamma:
+                if (data.sent) myQuestions = this.restatusQuestion(myQuestions, 103, 'sent');
                 break;
-            case 'Second':
-                this.setState({questions: this.getRestatusedQuestions(this.state.questions, {'1': 'finished', '2': 'playing', '3': 'hidden'})});
-                break;
-            case 'AfterSecond':
-                this.setState({questions: this.getRestatusedQuestions(this.state.questions, {'1': 'finished', '2': 'finished', '3': 'hidden'})});
-                break;
-            case 'BeforeRevival':
-                this.setState({questions: this.getRestatusedQuestions(this.state.questions, {'1': 'finished', '2': 'finished', '3': 'ready'})});
-                break;
-            case 'Revival':
-                this.setState({questions: this.getRestatusedQuestions(this.state.questions, {'1': 'finished', '2': 'finished', '3': 'playing'})});
-                break;
-            case 'AfterRevival':
-                this.setState({questions: this.getRestatusedQuestions(this.state.questions, {'1': 'finished', '2': 'finished', '3': 'playing'})});
+            case Stage.Revival:
+                if (data.sent) myQuestions = this.restatusQuestion(myQuestions, 201, 'sent');
                 break;
             default: 
         }
+        return myQuestions;
+    }
+
+    reinitializeFirstQuestions(data, questions) {
+        let bannedArray = data.banned.slice();
+        let correctArray = data.correct.slice();
+        bannedArray.sort((a, b) => {return a - b});
+        correctArray.sort((a, b) => {return a - b});
+        let myQuestions = questions.slice();
+        myQuestions.forEach((round, index) => {
+            if (round.roundid === '1') {
+                round.questions.forEach((item, index2) => {
+                    if (item.id === bannedArray[0]) {
+                        myQuestions[index].questions[index2].status = 'banned';
+                        bannedArray.shift();
+                    }
+                    if (item.id === correctArray[0]) {
+                        myQuestions[index].questions[index2].status = 'accepted';
+                        correctArray.shift();
+                    }
+                });
+            }
+        });
+        return myQuestions.slice();
+    }
+
+    onStageChange (questions, st) {
+        let myQuestions = questions.slice();
+        switch (st) {
+            case Stage.BeforeFirst:
+                myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'ready', '2': 'hidden', '3': 'hidden'});
+                break;
+            case Stage.First:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'playing', '2': 'hidden', '3': 'hidden'});
+                break;
+            case Stage.AfterFirst:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'hidden', '3': 'hidden'});
+                break;
+            case Stage.BeforeSecondAlpha:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.SecondAlpha:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'playing');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.AfterSecondAlpha:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.BeforeSecondBeta:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.SecondBeta:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'playing');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.AfterSecondBeta:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.BeforeSecondGamma:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.SecondGamma:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'playing');
+                break;
+            case Stage.AfterSecondGamma:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'finished');
+                break;
+            case Stage.BeforeRevival:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'finished', '3': 'ready'});
+                break;
+            case Stage.Revival:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'finished', '3': 'playing'});
+                break;
+            case Stage.AfterRevival:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'finished', '3': 'finished'});
+                break;
+            default: 
+        }
+       return myQuestions;
     }
 
     searchQuestion (id) {
@@ -138,20 +268,39 @@ class Player extends Component {
     }
 
     sendAnswer (id, answer) {
-        console.log([id, answer]);
-        this.recvCellBanned(id);
+        client.sendAnswer(id, answer)
+            .then((d) => {
+                const myQuestion = this.searchQuestion(d.questionid)
+                if (myQuestion && myQuestion.roundid === '1' && !d.correct) {
+                    this.setState({snack: this.createSnackMessage('wrong', '不正解：問題' + myQuestion.title)});
+                }
+            }).catch((d) => {
+                this.setState({snack: this.createSnackMessage('error', 'エラー：解答がRejectされました')});
+            });
     }
 
     sendTeamName (name) {
         if (name.length > 0) {
-            this.setState({snack: this.createSnackMessage('completed', 'チーム名[' + name + ']を登録しました')});
+            client.registerTeamName(name)
+                .then(() => {
+                    this.setState({snack: this.createSnackMessage('completed', 'チーム名[' + name + ']を登録しました')});
+                })
+                .catch(() => {
+                    this.setState({snack: this.createSnackMessage('error', 'チーム名の登録に失敗しました')});
+                });
         } else {
             this.setState({snack: this.createSnackMessage('error', 'チーム名は1文字以上で入力してください')});
         }
     }
 
     sendViewingCell (id) {
-        console.log(['viewing', id]);
+        client.openCell(id)
+            .then(() => {
+                console.log('openCell(' + id + ') was successfully sent.');
+            })
+            .catch((d) => {
+                console.log('rejected: openCell');
+            });
     }
 
     recvViewingCell (id) {
@@ -173,14 +322,27 @@ class Player extends Component {
             if (round.roundid === '1') {
                 round.questions.forEach((question, index2) => {
                     if (question.id === id) {
-                        myQuestions[index].questions[index2].status = 'banned'
+                        myQuestions[index].questions[index2].status = myQuestions[index].questions[index2].status === 'accepted' ? 'accepted' : 'banned';
                         questionName = question.title;
                     };
                 });
             }
         });
-        this.setState({questions: myQuestions});
-        this.setState({snack: this.createSnackMessage('banned', '問題' + questionName + 'が封鎖されました')});
+        this.setState({questions: myQuestions, snack: this.createSnackMessage('banned', '問題' + questionName + 'が封鎖されました')});
+    }
+
+    recvAnswered (id) {
+        let myQuestions = questions.slice();
+        let questionName;
+        myQuestions.forEach((round, index) => {
+            round.questions.forEach((question, index2) => {
+                if (question.id === id) {
+                    myQuestions[index].questions[index2].status = myQuestions[index].questions[index2].status === 'sent';
+                    questionName = question.title;
+                };
+            });
+        });
+        this.setState({questions: myQuestions, snack: this.createSnackMessage('completed', '問題' + questionName + 'に解答しました')});
     }
 
     recvAccepted (id) {
@@ -197,7 +359,7 @@ class Player extends Component {
             }
         });
         this.setState({questions: myQuestions});
-        this.setState({snack: this.createSnackMessage('accepted', '問題' + questionName + 'に正解しました')});
+        this.setState({snack: this.createSnackMessage('accepted', '問題' + questionName + 'に正解しました！')});
     }
 
     createSnackMessage (type, message) { 
@@ -216,10 +378,13 @@ class Player extends Component {
             messages.push((<p key={'CoverMessageP_' + index}>{item}</p>));
         });
         return (
-            <div className={this.props.classes.MessageCover} >
-                <img src={ImageSrc + 'AVLogo.png'} alt='noimg' className={this.props.classes.CoverLogo}/>
-                <div className={this.props.classes.CoverText}>{messages}</div>
-            </div>
+            <Router basename='/tokusetsu/party2019'>
+                <MySnack snack={this.state.snack} classes={this.props.classes}/>
+                <div className={this.props.classes.MessageCover} >
+                    <img src={ImageSrc + 'AVLogo.png'} alt='noimg' className={this.props.classes.CoverLogo}/>
+                    <div className={this.props.classes.CoverText}>{messages}</div>
+                </div>
+            </Router>
         );
     }
 
@@ -271,16 +436,16 @@ class Player extends Component {
             cookieValue_playeruuid = document.cookie.replace(/(?:(?:^|.*;\s*)playername\s*=\s*([^;]*).*$)|^.*$/, "$1");
         }
         switch (this.state.stage) {
-            case 'BeforeInitialization':
+            case Stage.BeforeInitialization:
                 return (this.renderCover(['しばらくお待ちください']));
-            case 'UserRegistration':
+            case Stage.UserRegistration:
                 if (cookieValue_playeruuid) {
                     return (this.renderCover(['参加登録が完了しました', 'このページへは現在使っているブラウザ以外ではアクセスしないでください']));
                 } else {
-                    return (this.renderForm(101));
+                    return (this.renderForm(301));
                 }
-            case 'TeamRegistration':
-                    return (this.renderForm(102));
+            case Stage.TeamRegistration:
+                    return (this.renderForm(302));
             default:
                 return (this.renderMain());
         }
@@ -319,6 +484,10 @@ class MySnack extends Component {
                 message.push(<BlockIcon key='icon'/>);
                 message.push(<span key='span'>{this.props.snack.content.message}</span>);
                 break;
+            case 'wrong':
+                message.push(<CancelIcon key='icon'/>);
+                message.push(<span key='span'>{this.props.snack.content.message}</span>);
+                break;
             case 'error':
                 message.push(<ErrorIcon key='icon'/>);
                 message.push(<span key='span'>{this.props.snack.content.message}</span>);
@@ -333,6 +502,7 @@ class MySnack extends Component {
                 'completed': this.props.snack.content.type === 'completed',
                 'banned': this.props.snack.content.type === 'banned',
                 'error': this.props.snack.content.type === 'error',
+                'wrong': this.props.snack.content.type === 'wrong',
             },
         );
         return (

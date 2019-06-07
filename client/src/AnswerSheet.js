@@ -79,7 +79,7 @@ class MessageBox extends Component {
             {
                 'accepted': this.props.status === 'accepted',
                 'banned': this.props.status === 'banned',
-                'finished': this.props.status === 'finished',
+                'finished': this.props.status === 'finished' || this.props.status === 'sent',
             },
         )
         let content;
@@ -96,6 +96,9 @@ class MessageBox extends Component {
                 break;
             case 'finished':
                 content = ('解答受付は終了しました');
+                break;
+            case 'sent':
+                content = ('解答を送信しました');
                 break;
             default:
         }
