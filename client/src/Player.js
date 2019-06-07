@@ -60,6 +60,9 @@ class Player extends Component {
             myTeam.teammateName = d.teammate;
             this.setState({questions: myQuestions, team: myTeam});
         });
+        client.on('stage changed', (d) => {
+            this.setState({questions: this.onStageChange(this.state.questions.slice(), d.stage)})
+        });
         client.on('cell open', (d) => {
             this.recvViewingCell(d.cellid);
         });
