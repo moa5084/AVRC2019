@@ -306,7 +306,7 @@ class Player extends Component {
     }
 
     recvViewingCell (id) {
-        let myQuestions = questions.slice();
+        let myQuestions = this.state.questions.slice();
         myQuestions.forEach((round, index) => {
             if (round.roundid === '1') {
                 round.questions.forEach((question, index2) => {
@@ -318,7 +318,7 @@ class Player extends Component {
     }
 
     recvCellBanned (id) {
-        let myQuestions = questions.slice();
+        let myQuestions = this.state.questions.slice();
         let questionName;
         myQuestions.forEach((round, index) => {
             if (round.roundid === '1') {
@@ -334,7 +334,7 @@ class Player extends Component {
     }
 
     recvAnswered (id) {
-        let myQuestions = questions.slice();
+        let myQuestions = this.state.questions.slice();
         let questionName;
         myQuestions.forEach((round, index) => {
             round.questions.forEach((question, index2) => {
@@ -348,7 +348,7 @@ class Player extends Component {
     }
 
     recvAccepted (id) {
-        let myQuestions = questions.slice();
+        let myQuestions = this.state.questions.slice();
         let questionName;
         myQuestions.forEach((round, index) => {
             if (round.roundid === '1') {
