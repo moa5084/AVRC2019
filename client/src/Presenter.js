@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
@@ -242,11 +243,11 @@ class Presenter extends Component {
             case Stage.TeamMaking:
                 return false;
             case Stage.BeforeFirst:
-                return false;
+                return this.getBingoCard();
             case Stage.First:
-                return false;
+                return this.getBingoCard();
             case Stage.AfterFirst:
-                return false;
+                return this.getBingoCard();
             case Stage.TeamRegistration:
                 return false;
             case Stage.BeforeSecondAlpha:
@@ -284,7 +285,38 @@ class Presenter extends Component {
             default:
                 return false;
         }
+    }
 
+    getBingoCard() {
+        let links = [];
+        this.state.questions.forEach(round => {
+            if (round.roundid === '1') {
+                round.questions.forEach((item, index) => {
+                    const blockClass = classNames(
+                        this.props.classes.QuestionLinkBlock,
+                        {
+                            'ready': item.status === 'ready',
+                            'teammateViewing': item.status === 'playing' && item.teammateViewing,
+                            'banned': item.status === 'banned',
+                            'accepted': item.status === 'accepted',
+                            'playing': item.status === 'playing',
+                        },
+                    );
+                    links.push(
+                        <div className={this.props.classes.QuestionLinkWrapper} key={'QuestionLinkWrapper_' + item.id}>
+                            <div className={blockClass}>
+                                {item.status === 'accepted' ? (<img  src={'https://juicy-apple.fun/av/AVRC2019/images/BingoBox/BingoBlockAccepted.svg'} alt='noimg' className={this.props.classes.QuestionLinkImgResult} />) : false}
+                                {item.status === 'banned' ? (<img  src={'https://juicy-apple.fun/av/AVRC2019/images/BingoBox/BingoBlockBanned.svg'} alt='noimg' className={this.props.classes.QuestionLinkImgResult} />) : false}
+                                <div className={this.props.classes.QuestionLink}>
+                                    <img src={'https://juicy-apple.fun/av/AVRC2019/images/BingoBox/BingoBlock' + index + '.svg'} alt='noimg' className={this.props.classes.QuestionLinkImg}/>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                });
+            }
+        });
+        return links.slice();
     }
 
     render () {
