@@ -12,6 +12,7 @@ class Presenter extends Component {
         super(props);
         this.state = {
             stage: props.stage || Stage.BeforeStart,
+            questions: questions,
         }
     }
     getTitle (st) {
@@ -68,7 +69,7 @@ class Presenter extends Component {
     }
 
     sendChangeStage (st) {
-        this.setState({stage: st});
+        this.setState({stage: st, questions: this.onStageChange(this.state.questions, st)});
     }
 
     getNextButton (st) {
@@ -115,9 +116,115 @@ class Presenter extends Component {
                 return false;
         }
     }
+
+    getRestatusedQuestions (questions, statusObject) {
+        let myQuestions = questions.slice();
+        myQuestions.forEach((round, index) => {
+            if (round.type === 'question') {
+                myQuestions[index].status = statusObject[round.roundid];
+                round.questions.forEach((question, index2) => {
+                    myQuestions[index].questions[index2].status = statusObject[round.roundid];
+                });
+            }
+        });
+        return myQuestions;
+    }
+    
+    restatusQuestion (questions, id, status) {
+        let myQuestions = questions.slice();
+        myQuestions.forEach((round, index) => {
+            if (round.type === 'question') {
+                round.questions.forEach((question, index2) => {
+                    if (question.id === id) myQuestions[index].questions[index2].status = status;
+                });
+            }
+        });
+        return myQuestions;
+    }
+
+    onStageChange (questions, st) {
+        let myQuestions = questions.slice();
+        switch (st) {
+            case Stage.BeforeFirst:
+                myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'ready', '2': 'hidden', '3': 'hidden'});
+                break;
+            case Stage.First:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'playing', '2': 'hidden', '3': 'hidden'});
+                break;
+            case Stage.AfterFirst:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'hidden', '3': 'hidden'});
+                break;
+            case Stage.BeforeSecondAlpha:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.SecondAlpha:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'playing');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.AfterSecondAlpha:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.BeforeSecondBeta:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'ready');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.SecondBeta:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'playing');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.AfterSecondBeta:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.BeforeSecondGamma:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'ready');
+                break;
+            case Stage.SecondGamma:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'playing');
+                break;
+            case Stage.AfterSecondGamma:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'playing', '3': 'hidden'});
+                    myQuestions = this.restatusQuestion(myQuestions, 101, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 102, 'finished');
+                    myQuestions = this.restatusQuestion(myQuestions, 103, 'finished');
+                break;
+            case Stage.BeforeRevival:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'finished', '3': 'ready'});
+                break;
+            case Stage.Revival:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'finished', '3': 'playing'});
+                break;
+            case Stage.AfterRevival:
+                    myQuestions = this.getRestatusedQuestions(myQuestions, {'1': 'finished', '2': 'finished', '3': 'finished'});
+                break;
+            default: 
+        }
+       return myQuestions;
+    }
+
     searchQuestion (id) {
         let res = [];
-        questions.forEach(round => {
+        this.state.questions.forEach(round => {
             round.questions.forEach(q => {
                 if (q.id === id) res.push(q);
             });
