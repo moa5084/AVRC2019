@@ -7,10 +7,19 @@ const styles = (theme) => {
 }
 
 class RankingDisplay extends Component {
+
+    renderRow (d) {
+        return (
+            <div className={this.props.classes.RankingRow}>
+                <div className={this.props.classes.RankingRowRank}></div>
+            </div>
+        );
+    }
+
     render () {
         return (
             <div className={this.props.classes.RankingDisplay}>
-                
+
             </div>
         );
     }

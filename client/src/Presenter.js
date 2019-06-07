@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
 
 import Styles from './Styles';
+import RankingDisplay from './RankingDisplay';
 import questions from './questions';
 import { Stage } from 'avrcclient';
 
@@ -243,11 +244,11 @@ class Presenter extends Component {
             case Stage.TeamMaking:
                 return false;
             case Stage.BeforeFirst:
-                return (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
+                return this.props.editable ? (<RankingDisplay editable={true}/>) : (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
             case Stage.First:
-                return (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
+                return this.props.editable ? (<RankingDisplay editable={true}/>) : (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
             case Stage.AfterFirst:
-                return (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
+                return this.props.editable ? (<RankingDisplay editable={true}/>) : (<RankingDisplay editable={false}/>);
             case Stage.TeamRegistration:
                 return false;
             case Stage.BeforeSecondAlpha:
