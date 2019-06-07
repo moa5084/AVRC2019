@@ -39,7 +39,7 @@ class Player extends Component {
                 visibility: true,
             },
             stage: Stage.UserRegistration,
-            questions: this.getRestatusedQuestions(questions, {'1': 'playing', '2': 'ready', '3': 'ready'}),
+            questions: this.getRestatusedQuestions(questions, {'1': 'hidden', '2': 'hidden', '3': 'hidden'}),
             snack: {
                 visibility: false,
                 content: {
@@ -47,10 +47,8 @@ class Player extends Component {
                     message: 'test',
                 },
             },
-            // questions: questions,
         }
         if (cookieValue_playername) this.initializeClient(cookieValue_playername);
-        else this.initializeClient('林檎');
     }
 
     initializeClient(name) {
@@ -262,6 +260,7 @@ class Player extends Component {
             myTeam.myName = name;
             this.setState({team: myTeam});
             this.setState({snack: this.createSnackMessage('completed', '名前を登録しました')});
+            this.initializeClient(name);
         } else {
             this.setState({snack: this.createSnackMessage('error', '名前は1文字以上で入力してください')});
         }
