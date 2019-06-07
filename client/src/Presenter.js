@@ -236,6 +236,74 @@ class Presenter extends Component {
 
     getMainContents (st) {
         let src;
+        const testArray = [
+            {
+                name: '林檎',
+                rank: 1,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 2,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 3,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 4,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 5,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 6,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 7,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 8,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 9,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 10,
+                primary: 1,
+                secondary: 1000,
+            },
+            {
+                name: '林檎',
+                rank: 11,
+                primary: 1,
+                secondary: 1000,
+            }
+        ]
         switch (st) {
             case Stage.BeforeStart:
                 return false;
@@ -244,7 +312,7 @@ class Presenter extends Component {
             case Stage.TeamMaking:
                 return false;
             case Stage.BeforeFirst:
-                return this.props.editable ? (<RankingDisplay editable={true}/>) : (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={testArray}/>) : (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
             case Stage.First:
                 return this.props.editable ? (<RankingDisplay editable={true}/>) : (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
             case Stage.AfterFirst:
