@@ -28,29 +28,39 @@ const styles = (theme) => ({
     },
     RankingRow: {
         width: '100%',
-        height: '10%',
+        height: '9%',
+        marginBottom: '0.75%',
+        paddingRight: '3%',
         display: 'flex',
         flexWrap: 'nowrap',
         boxSizing: 'border-box',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRight: theme.palette.primary.main + ' 10px solid',
     },
     RankingRowRankWrapper: {
         width: '10%',
         height: '100%',
+        boxSizing: 'border-box',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: theme.palette.primary.main,
+        borderRadius: '10px 0 10px 0',
+        color: '#fff',
     },
     RankingRowRank: {
 
     },
     RankingRowNameWrapper: {
-        width: '60%',
+        width: '50%',
         height: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        boxSizing: 'border-box',
     },
     RankingRowName: {
+        fontWeight: 'bold',
 
     },
     RankingRowPrimaryWrapper: {
@@ -59,16 +69,22 @@ const styles = (theme) => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        boxSizing: 'border-box',
+        backgroundColor: theme.palette.primary.light,
+        borderRadius: '10px',
+        color: '#fff',
+        margin: '0 1%',
     },
     RankingRowPrimary: {
 
     },
     RankingRowSecondaryWrapper: {
-        width: '15%',
+        width: '25%',
         height: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        boxSizing: 'border-box',
     },
     RankingRowSecondary: {
 
