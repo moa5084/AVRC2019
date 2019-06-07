@@ -39,7 +39,7 @@ class Player extends Component {
                 visibility: true,
             },
             stage: Stage.UserRegistration,
-            questions: this.getRestatusedQuestions(questions, {'1': 'hidden', '2': 'hidden', '3': 'hidden'}),
+            questions: this.onStageChange(questions, Stage.UserRegistration),
             snack: {
                 visibility: false,
                 content: {

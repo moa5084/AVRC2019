@@ -48,7 +48,7 @@ class PlayerHome extends Component {
                     {links}
                 </div>
                 <div className={this.props.classes.Footer}>
-                    <img src='http://juicy-apple.fun/av/AVRC2019/images/AVRC2018_Logo.png' alt='loading' className={this.props.classes.footerImg}/>
+                    <img src='http://juicy-apple.fun/av/AVRC2019/images/AVRC2019_Logo_forForm.png' alt='loading' className={this.props.classes.footerImg}/>
                 </div>
             </div>
         );
