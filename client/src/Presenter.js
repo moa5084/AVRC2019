@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 
 import Styles from './Styles';
@@ -420,7 +421,9 @@ class Presenter extends Component {
                 <div className={this.props.classes.PresenterMenu}>
                     <div className={this.props.classes.PresenterMenuHeader}>
                         <div className={this.props.classes.PresenterMenuTitle}>
-                            {this.getTitle(this.state.stage)}
+                            <Typography variant="h3" gutterBottom>
+                                {this.getTitle(this.state.stage)}
+                            </Typography>
                         </div>
                         <div className={this.props.classes.PresenterMenuNext}>
                             {this.getNextButton(this.state.stage)}
