@@ -59,6 +59,7 @@ class Player extends Component {
             let myTeam = this.state.team;
             myTeam.teamName = d.teamname;
             myTeam.teammateName = d.teammate;
+            myTeam.visibility = d.stage >= Stage.TeamRegistration;
             this.setState({questions: myQuestions, team: myTeam});
         });
         client.on('stage changed', (d) => {
