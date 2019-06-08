@@ -93,9 +93,44 @@ const styles = (theme) => ({
 
 class RankingDisplay extends Component {
 
-    renderRow (d) {
+    constructor (props) {
+        super(props);
+        this.state = {
+            animationList: [],
+            rowQueue: [],
+            animationCount: -1,
+        }
+    }
+    
+    render () {
+        let lists = [];
+        if (this.props.data) {
+            this.props.data.forEach(item => {
+                lists.push((<RankingRow d={item} classes={this.props.classes} key={'RankingRow_' + item.rank}/>));
+            });
+        }
         return (
-            <div className={this.props.classes.RankingRow + ' rank' + d.rank} key={'RankingRow_' + d.rank}>
+            <div className={this.props.classes.RankingDisplayWrapper}>
+                <div className={this.props.classes.RankingDisplay}>
+                    {lists}
+                </div>
+            </div>
+        );
+    }
+}
+
+class RankingRow extends Component {
+    componentDidMount () {
+        const item = this.props.d;
+        fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowRank, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowRankWrapper);
+        fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowName, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowNameWrapper);
+        fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowPrimary, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowPrimaryWrapper);
+        if (item.secondary) fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowSecondary, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowSecondaryWrapper);
+    }
+    render () {
+        const d = this.props.d;
+        return (
+            <div className={this.props.classes.RankingRow + ' rank' + d.rank}>
                 <div className={this.props.classes.RankingRowRankWrapper}>
                     <div className={this.props.classes.RankingRowRank}>{d.rank}</div>
                 </div>
@@ -110,31 +145,6 @@ class RankingDisplay extends Component {
                     <div className={this.props.classes.RankingRowSecondary}>{d.secondary}</div>
                 </div>
                 ) : false}
-            </div>
-        );
-    }
-
-    componentDidMount () {
-        this.props.data.forEach(item => {
-            fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowRank, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowRankWrapper);
-            fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowName, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowNameWrapper);
-            fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowPrimary, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowPrimaryWrapper);
-            if (item.secondary) fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowSecondary, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowSecondaryWrapper);
-        });
-    }
-
-    render () {
-        let lists = [];
-        if (this.props.data) {
-            this.props.data.forEach(item => {
-                lists.push(this.renderRow(item));
-            });
-        }
-        return (
-            <div className={this.props.classes.RankingDisplayWrapper}>
-                <div className={this.props.classes.RankingDisplay}>
-                    {lists}
-                </div>
             </div>
         );
     }
