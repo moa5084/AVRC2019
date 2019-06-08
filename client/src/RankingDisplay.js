@@ -98,8 +98,53 @@ class RankingDisplay extends Component {
         this.state = {
             animationList: [],
             rowQueue: [],
-            animationCount: -1,
+            nowList: [],
         }
+    }
+
+    animate () {
+        let myAnimationList = this.state.animationList.slice();
+        let myRowQueue = this.state.rowQueue.slice();
+        let myList = this.state.nowList.slice();
+        const d = myAnimationList[0][0];
+        if (myAnimationList.length <= 0 || myAnimationList[0].length <= 0) return;
+        myAnimationList[0].shift();
+        const isLast = myAnimationList[0].length <= 0;
+        switch (d.type) {
+            case 'enter':
+                myList = [];
+                myRowQueue[0].forEach(item => {
+                    myList.push({
+                        item: item,
+                        visibility: false,
+                    });
+                });
+                myRowQueue.shift();
+                break;
+            case 'show':
+                myList.forEach((item, index) => {
+                    if (d.target.rank === item.item.rank) myList[index].visibility = true;
+                });
+                break;
+            case 'close':
+                myList = [];
+                break;
+            default:
+        }
+        this.setState({
+            animationList: myAnimationList.slice(),
+            rowQueue: myRowQueue.slice(),
+            nowList: myList.slice(),
+        });
+        if (isLast) myAnimationList.shift();
+        else {
+            if (d.type !== 'wait') this.animate();
+            else {
+                setTimeout(() => {
+                    this.animate();
+                }, d.duration);
+            }
+        };
     }
 
     initializeAnimation (data) {
