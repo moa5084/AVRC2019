@@ -12,9 +12,83 @@ import { Stage } from 'avrcclient';
 class Presenter extends Component {
     constructor (props) {
         super(props);
+        const testArray = [
+            [
+                {
+                    name: '林檎',
+                    rank: 11,
+                    primary: 1,
+                    secondary: 1000,
+                },
+                {
+                    name: '林檎',
+                    rank: 10,
+                    primary: 1,
+                    secondary: 1000,
+                },
+                {
+                    name: '林檎',
+                    rank: 9,
+                    primary: 1,
+                    secondary: 1000,
+                },
+                {
+                    name: '林檎',
+                    rank: 8,
+                    primary: 1,
+                    secondary: 1000,
+                },
+                {
+                    name: '林檎',
+                    rank: 7,
+                    primary: 1,
+                    secondary: 1000,
+                },
+                {
+                    name: '林檎',
+                    rank: 6,
+                    primary: 1,
+                    secondary: 1000,
+                },
+                {
+                    name: '林檎',
+                    rank: 5,
+                    primary: 1,
+                    secondary: 1000,
+                },
+                {
+                    name: '林檎',
+                    rank: 4,
+                    primary: 1,
+                    secondary: 1000,
+                },
+                {
+                    name: '林檎',
+                    rank: 3,
+                    primary: 1,
+                    secondary: 1000,
+                },
+                {
+                    name: '林檎',
+                    rank: 2,
+                    primary: 1,
+                    secondary: 1000,
+                }
+
+            ],
+            [
+                {
+                    name: '林檎',
+                    rank: 1,
+                    primary: 1,
+                    secondary: 1000,
+                },
+            ],
+        ];
         this.state = {
             stage: props.stage || Stage.BeforeStart,
             questions: questions,
+            ranking: testArray,
         }
     }
     getTitle (st) {
@@ -72,6 +146,18 @@ class Presenter extends Component {
 
     sendChangeStage (st) {
         this.setState({stage: st, questions: this.onStageChange(this.state.questions, st)});
+    }
+
+    onLoad (st) {
+
+    }
+
+    onAnimate () {
+
+    }
+
+    onRecvAnimate () {
+        if (!this.props.editable) this.refs.MonitorFunc.animate();
     }
 
     getNextButton (st) {
@@ -236,79 +322,6 @@ class Presenter extends Component {
 
     getMainContents (st) {
         let src;
-        const testArray = [
-            [
-                {
-                    name: '林檎',
-                    rank: 11,
-                    primary: 1,
-                    secondary: 1000,
-                },
-                {
-                    name: '林檎',
-                    rank: 10,
-                    primary: 1,
-                    secondary: 1000,
-                },
-                {
-                    name: '林檎',
-                    rank: 9,
-                    primary: 1,
-                    secondary: 1000,
-                },
-                {
-                    name: '林檎',
-                    rank: 8,
-                    primary: 1,
-                    secondary: 1000,
-                },
-                {
-                    name: '林檎',
-                    rank: 7,
-                    primary: 1,
-                    secondary: 1000,
-                },
-                {
-                    name: '林檎',
-                    rank: 6,
-                    primary: 1,
-                    secondary: 1000,
-                },
-                {
-                    name: '林檎',
-                    rank: 5,
-                    primary: 1,
-                    secondary: 1000,
-                },
-                {
-                    name: '林檎',
-                    rank: 4,
-                    primary: 1,
-                    secondary: 1000,
-                },
-                {
-                    name: '林檎',
-                    rank: 3,
-                    primary: 1,
-                    secondary: 1000,
-                },
-                {
-                    name: '林檎',
-                    rank: 2,
-                    primary: 1,
-                    secondary: 1000,
-                }
-
-            ],
-            [
-                {
-                    name: '林檎',
-                    rank: 1,
-                    primary: 1,
-                    secondary: 1000,
-                },
-            ],
-        ]
         switch (st) {
             case Stage.BeforeStart:
                 return false;
@@ -317,45 +330,41 @@ class Presenter extends Component {
             case Stage.TeamMaking:
                 return false;
             case Stage.BeforeFirst:
-                return this.props.editable ? (<RankingDisplay editable={true} data={testArray}/>) : (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.First)}} emitAnimate={() => {this.onAnimate()}}/>) : (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
             case Stage.First:
-                return this.props.editable ? (<RankingDisplay editable={true}/>) : (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.First)}} emitAnimate={() => {this.onAnimate()}}/>) : (<div className={this.props.classes.BingoCardWrapper}><div className={this.props.classes.BingoCard}>{this.getBingoCard()}</div></div>);
             case Stage.AfterFirst:
-                return this.props.editable ? (<RankingDisplay editable={true}/>) : (<RankingDisplay editable={false}/>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.First)}} emitAnimate={() => {this.onAnimate()}}/>) : (<RankingDisplay ref='MonitorFunc' editable={false} data={this.state.ranking}/>);
             case Stage.TeamRegistration:
-                return false;
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking}/>) : (<RankingDisplay ref='MonitorFunc' editable={false} data={this.state.ranking}/>);
             case Stage.BeforeSecondAlpha:
                 return (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>);
             case Stage.SecondAlpha:
                 src = this.searchQuestion(101).img;
-                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.SecondAlpha)}} emitAnimate={() => {this.onAnimate()}}/>) : (<img src={src} alt='loading' className={this.props.classes.img}/>);
             case Stage.AfterSecondAlpha:
-                src = this.searchQuestion(101).img;
-                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.SecondAlpha)}} emitAnimate={() => {this.onAnimate()}}/>) : (<RankingDisplay ref='MonitorFunc' editable={false} data={this.state.ranking}/>);
             case Stage.BeforeSecondBeta:
                 return (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>);
             case Stage.SecondBeta:
                 src = this.searchQuestion(102).img;
-                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.SecondBeta)}} emitAnimate={() => {this.onAnimate()}}/>) : (<img src={src} alt='loading' className={this.props.classes.img}/>);
             case Stage.AfterSecondBeta:
-                src = this.searchQuestion(102).img;
-                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.SecondBeta)}} emitAnimate={() => {this.onAnimate()}}/>) : (<RankingDisplay ref='MonitorFunc' editable={false} data={this.state.ranking}/>);
             case Stage.BeforeSecondGamma:
                 return (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>);
             case Stage.SecondGamma:
                 src = this.searchQuestion(103).img;
-                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.SecondGamma)}} emitAnimate={() => {this.onAnimate()}}/>) : (<img src={src} alt='loading' className={this.props.classes.img}/>);
             case Stage.AfterSecondGamma:
-                src = this.searchQuestion(103).img;
-                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.SecondGamma)}} emitAnimate={() => {this.onAnimate()}}/>) : (<RankingDisplay ref='MonitorFunc' editable={false} data={this.state.ranking}/>);
             case Stage.BeforeRevival:
                 return (<img src={'https://juicy-apple.fun/av/AVRC2019/images/Ready.png'} alt='loading' className={this.props.classes.img}/>);
             case Stage.Revival:
                 src = this.searchQuestion(201).img;
-                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.Revival)}} emitAnimate={() => {this.onAnimate()}}/>) : (<img src={src} alt='loading' className={this.props.classes.img}/>);
             case Stage.AfterRevival:
-                src = this.searchQuestion(201).img;
-                return (<img src={src} alt='loading' className={this.props.classes.img}/>);
+                return this.props.editable ? (<RankingDisplay editable={true} data={this.state.ranking} emitGet={() => {this.onLoad(Stage.Revival)}} emitAnimate={() => {this.onAnimate()}}/>) : (<RankingDisplay ref='MonitorFunc' editable={false} data={this.state.ranking}/>);    
             default:
                 return false;
         }

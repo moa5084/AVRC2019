@@ -318,7 +318,7 @@ class RankingRow extends Component {
         const item = this.props.d;
         fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowRank, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowRankWrapper);
         fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowName, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowNameWrapper);
-        fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowPrimary, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowPrimaryWrapper);
+        if (item.primary) fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowPrimary, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowPrimaryWrapper);
         if (item.secondary) fitText('.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowSecondary, '.' + this.props.classes.RankingRow + '.rank' + item.rank + ' .' + this.props.classes.RankingRowSecondaryWrapper);
     }
     render () {
@@ -331,9 +331,12 @@ class RankingRow extends Component {
                 <div className={this.props.classes.RankingRowNameWrapper}>
                     <div className={this.props.classes.RankingRowName}>{d.name}</div>
                 </div>
+                {d.primary ? (
                 <div className={this.props.classes.RankingRowPrimaryWrapper}>
                     <div className={this.props.classes.RankingRowPrimary}>{d.primary}</div>
                 </div>
+                ) : false}
+                
                 {d.secondary ? (
                 <div className={this.props.classes.RankingRowSecondaryWrapper}>
                     <div className={this.props.classes.RankingRowSecondary}>{d.secondary}</div>
