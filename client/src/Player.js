@@ -48,7 +48,7 @@ class Player extends Component {
                 },
             },
         }
-        if (cookieValue_playername) this.initializeClient(cookieValue_playername);
+        if (cookieValue_playername) this.initializeClient(decodeURIComponent(cookieValue_playername));
     }
 
     initializeClient(name) {
@@ -260,7 +260,7 @@ class Player extends Component {
 
     registerName (name) {
         if (name.length > 0) {
-            document.cookie = 'playername=' + name + ';max-age=' + 60 * 60 * 5;
+            document.cookie = 'playername=' + encodeURIComponent(name) + ';max-age=' + 60 * 60 * 5;
             let myTeam = this.state.team;
             myTeam.myName = name;
             this.setState({team: myTeam});
@@ -308,7 +308,7 @@ class Player extends Component {
     }
 
     recvViewingCell (id) {
-        let myQuestions = questions.slice();
+        let myQuestions = this.state.questions.slice();
         myQuestions.forEach((round, index) => {
             if (round.roundid === '1') {
                 round.questions.forEach((question, index2) => {
@@ -320,7 +320,7 @@ class Player extends Component {
     }
 
     recvCellBanned (id) {
-        let myQuestions = questions.slice();
+        let myQuestions = this.state.questions.slice();
         let questionName;
         myQuestions.forEach((round, index) => {
             if (round.roundid === '1') {
@@ -336,7 +336,7 @@ class Player extends Component {
     }
 
     recvAnswered (id) {
-        let myQuestions = questions.slice();
+        let myQuestions = this.state.questions.slice();
         let questionName;
         myQuestions.forEach((round, index) => {
             round.questions.forEach((question, index2) => {
@@ -350,7 +350,7 @@ class Player extends Component {
     }
 
     recvAccepted (id) {
-        let myQuestions = questions.slice();
+        let myQuestions = this.state.questions.slice();
         let questionName;
         myQuestions.forEach((round, index) => {
             if (round.roundid === '1') {

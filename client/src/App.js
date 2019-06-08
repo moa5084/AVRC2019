@@ -9,6 +9,7 @@ import { ThemeProvider, makeStyles } from '@material-ui/styles';
 import Particles from 'react-particles-js';
 
 import Player from './Player';
+import Presenter from './Presenter';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -111,6 +112,26 @@ function Main() {
           <Route path='/Senior' render={(props) => {
             return (
               <Player type='C' />
+            );
+          }}/>
+          <Route exact path='/Presenter' render={(props) => {
+            return (
+              <Presenter editable={true}/>
+            );
+          }}/>
+          <Route path='/Presenter/:stage' render={(props) => {
+            return (
+              <Presenter editable={true} stage={Number(props.match.params.stage)}/>
+            );
+          }}/>
+          <Route exact path='/Monitor' render={(props) => {
+            return (
+              <Presenter editable={false}/>
+            );
+          }}/>
+          <Route path='/Monitor/:stage' render={(props) => {
+            return (
+              <Presenter editable={false} stage={Number(props.match.params.stage)}/>
             );
           }}/>
         </Switch>

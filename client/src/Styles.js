@@ -133,6 +133,7 @@ const Styles = (theme) => ({
         padding: '10px',
         display: 'flex',
         flexWrap: 'wrap',
+        justifyContent: 'center',
         '&::before': {
             content: '""',
             width: '20px',
@@ -221,6 +222,25 @@ const Styles = (theme) => ({
                 paddingTop: '20%',
             },
         }
+    },
+    BingoCardWrapper: {
+        width: '70%',
+        position: 'relative',
+        '&::before': {
+            content: '""',
+            display: 'block',
+            width: '100%',
+            paddingTop: '100%',
+        },
+    },
+    BingoCard: {
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexWrap: 'wrap',
     },
     '@keyframes Block-playing': {
         '0%': {
@@ -320,7 +340,33 @@ const Styles = (theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    PresenterMenu: {
+        display: 'flex',
+        width: '30%',
+    },
+    PresenterMain: {
+        display: 'flex',
+        width: '70%',
+    },
+    PresenterMenuHeader: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        width: '100%',
+    },
+    PresenterMenuTitle: {
+        width: '100%',
+        textAlign: 'center',
+        fontSize: 'large',
+    },
+    PresenterMenuNext: {
+        width: '100%',
+    },
+    ControlButton: {
+        width: '90%',
+        margin: '0 3%',
+    },
 });
 
 export default Styles;
