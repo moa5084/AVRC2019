@@ -14,7 +14,8 @@
     "react-pose": "^4.0.8",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "typeface-roboto": "0.0.54"
+    "typeface-roboto": "0.0.54",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

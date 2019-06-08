@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import posed from 'react-pose';
 
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
 
 import { fitText } from './fitText';
@@ -47,6 +49,7 @@ const styles = (theme) => ({
         backgroundColor: theme.palette.primary.main,
         borderRadius: '10px 0 10px 0',
         color: '#fff',
+        boxShadow: 'inset 0 0 5px 0 #fff',
     },
     RankingRowRank: {
 
@@ -74,6 +77,7 @@ const styles = (theme) => ({
         borderRadius: '10px',
         color: '#fff',
         margin: '0 1%',
+        boxShadow: 'inset 0 0 5px 0 #fff',
     },
     RankingRowPrimary: {
 
@@ -89,6 +93,37 @@ const styles = (theme) => ({
     RankingRowSecondary: {
 
     },
+    RankingDisplayPlayButton: {
+        position: 'absolute',
+        top: '0',
+        left: '100%',
+        width: '5%',
+        height: '5%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+});
+
+const PosedRow = posed.div({
+    hidden: {
+        opacity: 0,
+        y: 100,
+        scale: 0.5,
+        transition: {
+            opacity: {ease: 'linear', duration: 500},
+            default: {ease: 'easeOut', duration: 500},
+        },
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            opacity: {ease: 'linear', duration: 500},
+            default: {ease: 'easeOut', duration: 500},
+        },
+    }
 });
 
 class RankingDisplay extends Component {
@@ -99,6 +134,7 @@ class RankingDisplay extends Component {
             animationList: [],
             rowQueue: [],
             nowList: [],
+            mode: 'animate',
         }
     }
 
@@ -185,7 +221,7 @@ class RankingDisplay extends Component {
                     });
                     myAnimationList[myAnimationList.length - 1].push({
                         type: 'wait',
-                        duration: '2000',
+                        duration: '500',
                     });
                     myAnimationList[myAnimationList.length - 1].push({
                         type: 'enter',
@@ -198,7 +234,7 @@ class RankingDisplay extends Component {
                 });
                 myAnimationList[myAnimationList.length - 1].push({
                     type: 'wait',
-                    duration: '200',
+                    duration: '100',
                 });
             });
             myAnimationList.push([]);
@@ -208,6 +244,7 @@ class RankingDisplay extends Component {
             animationList: myAnimationList.slice(),
             rowQueue: myRowQueue.slice(),
             animationCount: -1,
+            mode: this.props.editable ? 'display' : 'animate',
         });
     }
 
@@ -215,19 +252,62 @@ class RankingDisplay extends Component {
         this.initializeAnimation(this.props.data);
     }
 
+    componentWillReceiveProps (nextProps) {
+        if (this.props.data !== nextProps.data) {
+            this.initializeAnimation(this.props.data);
+            if (this.props.emitRanking) this.props.emitRanking(nextProps.data);
+        }
+    }
+
+    onPlay () {
+        this.animate();
+        if (this.props.emitAnimate) this.props.emitAnimate();
+        this.setState({mode: 'animate'});
+    }
+
+    onLoad () {
+        if (this.props.emitGet) this.props.emitGet();
+    }
+
+    onRecvRanking() {
+        this.initializeAnimation(this.props.data);
+    }
+
+    getButtonComponent (txt, onClick) {
+        return (
+            <Button variant="contained" color="primary" className={this.props.classes.ControlButton} onClick={onClick ? onClick : () => {}} >
+                {txt}
+            </Button>
+        );
+    }
+
     render () {
         let lists = [];
-        if (this.state.nowList) {
-            this.state.nowList.forEach(it => {
-                const item = it.item;
-                if (it.visibility) lists.push(<RankingRow d={item} classes={this.props.classes} key={'RankingRow_' + item.rank}/>);
+        if (this.state.mode === 'animate') {
+            if (this.state.nowList) {
+                this.state.nowList.forEach(it => {
+                    const item = it.item;
+                    lists.push(<RankingRow d={item} classes={this.props.classes} key={'RankingRow_' + item.rank} visibility={it.visibility}/>);
+                });
+            }
+        } else {
+            this.props.data.forEach((group) => {
+                group.forEach(item => {
+                    lists.unshift(<RankingRow d={item} classes={this.props.classes} key={'RankingRow_' + item.rank} visibility={true}/>)
+                });
             });
         }
         return (
-            <div className={this.props.classes.RankingDisplayWrapper} onClick={() => {this.animate()}}>
+            <div className={this.props.classes.RankingDisplayWrapper}>
                 <div className={this.props.classes.RankingDisplay}>
                     {lists}
                 </div>
+                {this.props.editable ? (
+                    <div className={this.props.classes.RankingDisplayPlayButton}>
+                        {this.getButtonComponent('Play', () => {this.onPlay()})}
+                        {this.getButtonComponent('Load', () => {this.onLoad()})}
+                    </div>
+                ) : false}
             </div>
         );
     }
@@ -244,7 +324,7 @@ class RankingRow extends Component {
     render () {
         const d = this.props.d;
         return (
-            <div className={this.props.classes.RankingRow + ' rank' + d.rank}>
+            <PosedRow className={this.props.classes.RankingRow + ' rank' + d.rank} pose={this.props.visibility ? 'visible' : 'hidden'}>
                 <div className={this.props.classes.RankingRowRankWrapper}>
                     <div className={this.props.classes.RankingRowRank}>{d.rank}</div>
                 </div>
@@ -259,7 +339,7 @@ class RankingRow extends Component {
                     <div className={this.props.classes.RankingRowSecondary}>{d.secondary}</div>
                 </div>
                 ) : false}
-            </div>
+            </PosedRow>
         );
     }
 }
