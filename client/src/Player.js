@@ -18,7 +18,7 @@ import RoundMenu from './RoundMenu';
 import questions from './questions';
 import Header from './Header';
 import Styles from './Styles';
-import { AVRCClient, Stage } from 'avrcclient';
+import { AVRCClient, Stage, PlayerSide } from 'avrcclient';
 
 const ImageSrc = 'https://juicy-apple.fun/av/AVRC2019/images/';
 
@@ -52,7 +52,8 @@ class Player extends Component {
     }
 
     initializeClient(name) {
-        client = new AVRCClient(name);
+        const side = this.props.type === 'A' ? PlayerSide.A : (this.props.type === 'B' ? PlayerSide.B : PlayerSide.Z);
+        client = new AVRCClient(name, side);
         client.on('connected', (d) => {
             const myQuestions = this.initializeQuestions(d);
             let myTeam = this.state.team;
