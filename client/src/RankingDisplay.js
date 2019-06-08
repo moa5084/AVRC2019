@@ -101,12 +101,71 @@ class RankingDisplay extends Component {
             animationCount: -1,
         }
     }
-    
+
+    initializeAnimation (data) {
+        let myAnimationList = [[]];
+        let myRowQueue = [[]];
+        let max_N = 0;
+        data.forEach(group => {
+            group.forEach(item => {
+                max_N++;
+            });
+        });
+
+        myAnimationList[myAnimationList.length - 1].push({
+            type: 'enter',
+        });
+
+        data.forEach(group => {
+            group.forEach(item => {
+                if ((myRowQueue.length === 1 && max_N % 10 !== 0 && myRowQueue[0].length === max_N % 10) || myRowQueue[myRowQueue.length - 1].length >= 10) {
+                    myRowQueue.push([]);
+                    myAnimationList[myAnimationList.length - 1].push({
+                        type: 'wait',
+                        duration: '2000',
+                    });
+                    myAnimationList[myAnimationList.length - 1].push({
+                        type: 'close',
+                    });
+                    myAnimationList[myAnimationList.length - 1].push({
+                        type: 'wait',
+                        duration: '2000',
+                    });
+                    myAnimationList[myAnimationList.length - 1].push({
+                        type: 'enter',
+                    });
+                }
+                myRowQueue[myRowQueue.length - 1].unshift(item);
+                myAnimationList[myAnimationList.length - 1].push({
+                    type: 'show',
+                    target: item,
+                });
+                myAnimationList[myAnimationList.length - 1].push({
+                    type: 'wait',
+                    duration: '200',
+                });
+            });
+            myAnimationList.push([]);
+        });
+        myAnimationList.pop();
+        this.setState({
+            animationList: myAnimationList.slice(),
+            rowQueue: myRowQueue.slice(),
+            animationCount: -1,
+        });
+    }
+
+    componentDidMount () {
+        this.initializeAnimation(this.props.data);
+    }
+
     render () {
         let lists = [];
-        if (this.props.data) {
-            this.props.data.forEach(item => {
-                lists.push((<RankingRow d={item} classes={this.props.classes} key={'RankingRow_' + item.rank}/>));
+        if (this.state.rowQueue) {
+            this.state.rowQueue.forEach(group => {
+                group.forEach(item => {
+                    lists.push((<RankingRow d={item} classes={this.props.classes} key={'RankingRow_' + item.rank}/>));
+                });
             });
         }
         return (
