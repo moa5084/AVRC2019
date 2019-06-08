@@ -106,10 +106,9 @@ class RankingDisplay extends Component {
         let myAnimationList = this.state.animationList.slice();
         let myRowQueue = this.state.rowQueue.slice();
         let myList = this.state.nowList.slice();
-        const d = myAnimationList[0][0];
         if (myAnimationList.length <= 0 || myAnimationList[0].length <= 0) return;
+        const d = myAnimationList[0][0];
         myAnimationList[0].shift();
-        const isLast = myAnimationList[0].length <= 0;
         switch (d.type) {
             case 'enter':
                 myList = [];
@@ -123,7 +122,9 @@ class RankingDisplay extends Component {
                 break;
             case 'show':
                 myList.forEach((item, index) => {
-                    if (d.target.rank === item.item.rank) myList[index].visibility = true;
+                    if (d.target.rank === item.item.rank) {
+                        myList[index].visibility = true;
+                    }
                 });
                 break;
             case 'close':
@@ -131,20 +132,30 @@ class RankingDisplay extends Component {
                 break;
             default:
         }
-        this.setState({
-            animationList: myAnimationList.slice(),
-            rowQueue: myRowQueue.slice(),
-            nowList: myList.slice(),
+        const result = new Promise((resolve) => {
+            this.setState({
+                animationList: myAnimationList.slice(),
+                rowQueue: myRowQueue.slice(),
+                nowList: myList.slice(),
+            });
+            resolve();
         });
-        if (isLast) myAnimationList.shift();
-        else {
-            if (d.type !== 'wait') this.animate();
-            else {
-                setTimeout(() => {
-                    this.animate();
-                }, d.duration);
-            }
-        };
+        result.then(() => {
+            const isLast = myAnimationList[0].length <= 0;
+            if (isLast) {
+                myAnimationList.shift();
+                this.setState({
+                    animationList: myAnimationList.slice(),
+                });
+            } else {
+                if (d.type !== 'wait') this.animate();
+                else {
+                    setTimeout(() => {
+                        this.animate();
+                    }, d.duration);
+                }
+            };
+        });
     }
 
     initializeAnimation (data) {
@@ -206,15 +217,14 @@ class RankingDisplay extends Component {
 
     render () {
         let lists = [];
-        if (this.state.rowQueue) {
-            this.state.rowQueue.forEach(group => {
-                group.forEach(item => {
-                    lists.push((<RankingRow d={item} classes={this.props.classes} key={'RankingRow_' + item.rank}/>));
-                });
+        if (this.state.nowList) {
+            this.state.nowList.forEach(it => {
+                const item = it.item;
+                if (it.visibility) lists.push(<RankingRow d={item} classes={this.props.classes} key={'RankingRow_' + item.rank}/>);
             });
         }
         return (
-            <div className={this.props.classes.RankingDisplayWrapper}>
+            <div className={this.props.classes.RankingDisplayWrapper} onClick={() => {this.animate()}}>
                 <div className={this.props.classes.RankingDisplay}>
                     {lists}
                 </div>
