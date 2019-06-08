@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/styles';
 import Styles from './Styles';
 import RankingDisplay from './RankingDisplay';
 import questions from './questions';
-import { Stage } from 'avrcclient';
+import { Stage, PlayerSide } from 'avrcclient';
 
 class Presenter extends Component {
     constructor (props) {
@@ -147,18 +147,73 @@ class Presenter extends Component {
 
     sendChangeStage (st) {
         this.setState({stage: st, questions: this.onStageChange(this.state.questions, st)});
+        //uc
     }
 
     onLoad (st) {
-
+        //uc: dataに受け取った物を投げる，dataをemitする
+        let data;
+        this.setState({ranking: this.reshapeRanking(st, data)});
     }
 
     onAnimate () {
+        //uc: animateをemitする
+    }
 
+    onRecvStageChange (st) {
+        // uc
+    }
+
+    onRecvRanking (st, data) {
+        this.setState({ranking: this.reshapeRanking(st, data)});
     }
 
     onRecvAnimate () {
         if (!this.props.editable) this.refs.MonitorFunc.animate();
+    }
+
+    reshapeRanking (st, data) {
+        let myRanking = [];
+        switch (st) {
+            case Stage.First:
+                data.forEach((item, index) => {
+                    if (item.team[0].side !== PlayerSide.Z) {
+                        myRanking.push({
+                            name: item.teamname,
+                            rank: index + 1,
+                            primary: Math.floor(item.score / 10000000) + 'Bingo',
+                            secondary: this.reshapeTime(item.score % 10000000),
+                        });
+                    }
+                });
+                break;
+            case Stage.SecondAlpha:
+            case Stage.SecondBeta:
+            case Stage.SecondGamma:
+            case Stage.Revival:
+                data.forEach((item, index) => {
+                    if (item.team[0].side !== PlayerSide.Z) {
+                        myRanking.push({
+                            name: item.teamname,
+                            rank: index + 1,
+                            primary: this.reshapeTime(item.time),
+                        });
+                    }
+                });
+                break;
+            default:
+        }
+        return myRanking.slice();
+    }
+
+    reshapeTime (time) {
+        let myTime = time;
+        const msec = ("000" + Math.floor(myTime % 1000)).slice(-3);
+        myTime -= myTime % 1000;
+        const sec = ("00" + Math.floor(myTime / 1000) % 60).slice(-2);
+        myTime -= myTime % 60000;
+        const min = ("00" + Math.floor(myTime / 1000 / 60)).slice(-2);
+        return min + ':' + sec + '.' + msec;
     }
 
     getNextButton (st) {

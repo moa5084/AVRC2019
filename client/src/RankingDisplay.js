@@ -255,7 +255,6 @@ class RankingDisplay extends Component {
     componentWillReceiveProps (nextProps) {
         if (this.props.data !== nextProps.data) {
             this.initializeAnimation(this.props.data);
-            if (this.props.emitRanking) this.props.emitRanking(nextProps.data);
         }
     }
 
