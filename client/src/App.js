@@ -87,7 +87,7 @@ function Wrapper() {
   const classes = useStyles();
   return (
     <div className={classes.wrapper}>
-      <Particles className={classes.particles} />
+      {/* <Particles className={classes.particles} /> */}
       <Main />
     </div>
   );
@@ -99,12 +99,12 @@ function Main() {
     <div className={classes.main}>
       <Router basename='/tokusetsu/party2019'>
         <Switch>
-          <Route path='/Newcomer' render={(props) => {
+          <Route sensitive path='/Newcomer' render={(props) => {
             return (
               <Player type='A' />
             );
           }}/>
-          <Route path='/NewComer' render={(props) => {
+          <Route sensitive path='/NewComer' render={(props) => {
             return (
               <Player type='B' />
             );

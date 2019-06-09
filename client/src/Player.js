@@ -36,7 +36,7 @@ class Player extends Component {
                 teamName: 'アナザーピジョン',
                 myName: cookieValue_playername || 'no name',
                 teammateName: 'ピジョン',
-                visibility: true,
+                visibility: false,
             },
             stage: Stage.UserRegistration,
             questions: this.onStageChange(questions, Stage.UserRegistration),
@@ -49,6 +49,7 @@ class Player extends Component {
             },
         }
         if (cookieValue_playername) this.initializeClient(decodeURIComponent(cookieValue_playername));
+        console.log(this.props.type);
     }
 
     initializeClient(name) {
@@ -60,10 +61,10 @@ class Player extends Component {
             myTeam.teamName = d.teamname;
             myTeam.teammateName = d.teammate;
             myTeam.visibility = d.stage >= Stage.TeamRegistration;
-            this.setState({questions: myQuestions, team: myTeam});
+            this.setState({questions: myQuestions, team: myTeam, stage: d.stage});
         });
         client.on('stage changed', (d) => {
-            this.setState({questions: this.onStageChange(this.state.questions.slice(), d.stage)})
+            this.setState({stage: d.stage, questions: this.onStageChange(this.state.questions.slice(), d.stage)})
         });
         client.on('cell open', (d) => {
             this.recvViewingCell(d.cellid);
@@ -73,6 +74,14 @@ class Player extends Component {
         });
         client.on('problem answered', (d) => {
             this.recvAnswered(d.problemid);
+        });
+        client.on('accepted', (d) => {
+            this.recvAccepted(d.problemid);
+        });
+        client.on('teamname', (d) => {
+            let myTeam = this.state.team;
+            myTeam.teamName = d.teamname;
+            this.setState({team: myTeam});
         });
         client.on('bingo', (d) => {
             this.setState({snack: this.createSnackMessage('accepted', 'ビンゴを達成しました！')});
@@ -298,17 +307,20 @@ class Player extends Component {
     }
 
     sendViewingCell (id) {
-        client.openCell(id)
-            .then(() => {
-                console.log('openCell(' + id + ') was successfully sent.');
-            })
-            .catch((d) => {
-                console.log('rejected: openCell');
-            });
+        if (id >= 1 && id <= 25) {
+            client.openCell(id)
+                .then(() => {
+                    console.log('openCell(' + id + ') was successfully sent.');
+                })
+                .catch((d) => {
+                    console.log('rejected: openCell', d);
+                });
+        }
     }
 
     recvViewingCell (id) {
         let myQuestions = this.state.questions.slice();
+        console.log(id);
         myQuestions.forEach((round, index) => {
             if (round.roundid === '1') {
                 round.questions.forEach((question, index2) => {
@@ -341,7 +353,7 @@ class Player extends Component {
         myQuestions.forEach((round, index) => {
             round.questions.forEach((question, index2) => {
                 if (question.id === id) {
-                    myQuestions[index].questions[index2].status = myQuestions[index].questions[index2].status === 'sent';
+                    myQuestions[index].questions[index2].status = 'sent';
                     questionName = question.title;
                 };
             });
@@ -356,13 +368,15 @@ class Player extends Component {
             if (round.roundid === '1') {
                 round.questions.forEach((question, index2) => {
                     if (question.id === id) {
-                        myQuestions[index].questions[index2].status = 'accepted'
+                        myQuestions[index].questions[index2].status = 'accepted';
                         questionName = question.title;
                     };
                 });
             }
         });
-        this.setState({questions: myQuestions});
+        setTimeout(() => {
+            this.setState({questions: myQuestions});
+        }, 500);
         this.setState({snack: this.createSnackMessage('accepted', '問題' + questionName + 'に正解しました！')});
     }
 
@@ -395,10 +409,11 @@ class Player extends Component {
     renderForm (type) {
         const myQuestion = this.searchQuestion(type);
         let sheet;
-        if (type === 102) sheet = (<AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.sendTeamName(ans);}}/>);
+        if (type === 302) sheet = (<AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.sendTeamName(ans);}}/>);
         else sheet = (<AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.registerName(ans);}}/>);
         return (
             <Router basename='/tokusetsu/party2019'>
+                <Header questions={this.state.questions} team={this.state.team} type={this.props.type} isform={true}/>
                 <MySnack snack={this.state.snack} classes={this.props.classes}/>
                 {sheet}
             </Router>
@@ -412,18 +427,18 @@ class Player extends Component {
                 <Header questions={this.state.questions} team={this.state.team} type={this.props.type}/>
                 <MySnack snack={this.state.snack} classes={this.props.classes}/>
                 <Switch>
-                    <Route exact path={prefix} render={(props) => {
+                    <Route sensitive exact path={prefix} render={(props) => {
                         return (
                             <PlayerHome questions={this.state.questions} type={this.props.type}/>
                         );
                     }}/>
-                    <Route exact path={prefix + '/:round'} render={(props) => {
+                    <Route sensitive exact path={prefix + '/:round'} render={(props) => {
                         const myRound = this.searchRound(props.match.params.round);
                         return (
                             <RoundMenu round={myRound} viewingFunction={(id) => {this.sendViewingCell(id);}} type={this.props.type}/>
                         );
                     }}/>
-                    <Route exact path={prefix + '/:round/:question'} render={(props) => {
+                    <Route sensitive exact path={prefix + '/:round/:question'} render={(props) => {
                         const myQuestion = this.searchQuestion(Number(props.match.params.question));
                         return (
                             <AnswerSheet question={myQuestion} sendFunction={(id, ans) =>{this.sendAnswer(id, ans);}}/>

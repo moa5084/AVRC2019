@@ -35,21 +35,21 @@ class Header extends Component {
                 case 1:
                     teamData = (
                         <div className={this.props.classes.HeaderTeamWrapper} onClick={() => {this.clickHandler()}}>
-                            <PersonIcon />{this.props.team.myName}
+                            <PersonIcon />{decodeURIComponent(this.props.team.myName)}
                         </div>
                     );
                     break;
                 case 2:
                     teamData = (
                         <div className={this.props.classes.HeaderTeamWrapper} onClick={() => {this.clickHandler()}}>
-                            <PersonAddIcon />{this.props.team.teammateName}
+                            <PersonAddIcon />{decodeURIComponent(this.props.team.teammateName)}
                         </div>
                     );
                     break;
                 default:
                     teamData = (
                         <div className={this.props.classes.HeaderTeamWrapper} onClick={() => {this.clickHandler()}}>
-                            <PeopleIcon />{this.props.team.teamName}
+                            <PeopleIcon />{decodeURIComponent(this.props.team.teamName)}
                         </div>
                     );
                     break;
@@ -57,27 +57,27 @@ class Header extends Component {
         } else {
             teamData = (
                 <div className={this.props.classes.HeaderTeamWrapper}>
-                    <PersonIcon />{this.props.team.myName}
+                    <PersonIcon />{decodeURIComponent(this.props.team.myName)}
                 </div>
             );
         }
         const prefix = this.props.type === 'A' ? '/Newcomer' : (this.props.type === 'B' ? '/NewComer' : '/Senior');
         return (
             <div className={this.props.classes.Header}>
-                <div className={this.props.classes.HeaderBackWrapper}>
+                {!this.props.isform ? (<div className={this.props.classes.HeaderBackWrapper}>
                     <Switch>
-                        <Route exact path={prefix + '/:round'} render={props => {
+                        <Route sensitive exact path={prefix + '/:round'} render={props => {
                             return (
                                 <Link to={prefix} className={this.props.classes.HeaderBackButton}><KeyboardArrowLeftIcon className={this.props.classes.HeaderBackArrow}/>ホーム画面へ</Link>
                             );
                         }} />
-                        <Route exact path={prefix + '/:round/:id'} render={props => {
+                        <Route sensitive exact path={prefix + '/:round/:id'} render={props => {
                             return (
                                 <Link to={prefix + '/' + props.match.params.round} className={this.props.classes.HeaderBackButton}><KeyboardArrowLeftIcon  className={this.props.classes.HeaderBackArrow}/>問題選択へ</Link>
                             );
                         }} />
                     </Switch>
-                </div>
+                </div>) : false}
                 {teamData}
             </div>
         );

@@ -10,6 +10,10 @@ import RankingDisplay from './RankingDisplay';
 import questions from './questions';
 import { Stage, PlayerSide } from 'avrcclient';
 
+import io from 'socket.io-client';
+
+let socket;
+
 class Presenter extends Component {
     constructor (props) {
         super(props);
@@ -91,6 +95,10 @@ class Presenter extends Component {
             questions: questions,
             ranking: testArray,
         }
+        socket = io('http://133.130.123.144:33333/presenter');
+        socket.on('connect', () => {
+
+        });
     }
     getTitle (st) {
         switch (st) {
@@ -147,7 +155,10 @@ class Presenter extends Component {
 
     sendChangeStage (st) {
         this.setState({stage: st, questions: this.onStageChange(this.state.questions, st)});
-        //uc
+        socket.emit('request', {
+            type: 'change stage',
+            stage: st,
+        });
     }
 
     onLoad (st) {

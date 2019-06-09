@@ -65,7 +65,7 @@ class AnswerSheet extends Component {
                     )
                 }
                 <div className={this.props.classes.Footer}>
-                    <img src='http://juicy-apple.fun/av/AVRC2019/images/AVRC2019_Logo_forForm.png' alt='loading' className={this.props.classes.footerImg}/>
+                    {this.props.question.type === 'question' ? (<img src='http://juicy-apple.fun/av/AVRC2019/images/AVRC2019_Logo_forForm.png' alt='loading' className={this.props.classes.footerImg}/>) : false}
                 </div>
             </div>
         );
